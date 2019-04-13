@@ -11,14 +11,14 @@ const slideUp = keyframes`
 
 const StartMenu = styled.section`
     position: absolute;
-    display: ${props => props.display};
+    display: ${props => (props.display ? "flex" : "none")};
     left: 0;
     top: 0;
     width: 100%;
     max-width: 450px;
     height: calc(100vh - 3.5rem);
     background: ${props => props.theme.primary};
-    z-index: 99999999999;
+    z-index: 150;
     animation: ${slideUp} 0.3s ease-out 1 forwards;
 
     @media (min-width: 450px) {
