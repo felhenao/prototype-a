@@ -1,13 +1,10 @@
 import React, { Component } from "react";
-import { Route, Link } from "react-router-dom";
+import { Route } from "react-router-dom";
+import history from "./history";
 import { ThemeProvider } from "styled-components";
-import Folder from "./components/folders/folderStructure/Folder";
-import MenuBar from "./components/folders/folderStructure/MenuBar";
-import NameBar from "./components/folders/folderStructure/NameBar";
-import Taskbar from "./components/taskbar/Taskbar";
-import StartButtonImg from "./components/taskbar/StartButtonImg";
-import logo from "./components/taskbar/img/small-logo.svg";
-import ButtonContainer from "./components/taskbar/ButtonContainer";
+import FolderApp from "./components/folders/FolderApp";
+import TaskbarApp from "./components/taskbar/TaskbarApp";
+
 import Desktop from "./components/desktop/Desktop";
 import Icon from "./components/desktop/Icon";
 import LargeWidgetsContainer from "./components/startMenu/LargeWidgetsContainer";
@@ -15,13 +12,15 @@ import SmallWidgetsContainer from "./components/startMenu/SmallWidgetsContainer"
 import StartMenu from "./components/startMenu/StartMenu";
 import Widget from "./components/startMenu/Widget";
 import LightTheme from "./components/theme/Light";
+import DarkTheme from "./components/theme/Dark";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-    faArrowLeft,
-    faLongArrowAltLeft
+    faLongArrowAltLeft,
+    faWindowMinimize,
+    faTimes
 } from "@fortawesome/free-solid-svg-icons";
-library.add(faArrowLeft, faLongArrowAltLeft);
+library.add(faLongArrowAltLeft, faWindowMinimize, faTimes);
 
 class App extends Component {
     state = {
@@ -39,7 +38,9 @@ class App extends Component {
     };
 
     closeStartMenu = () => {
-        this.setState({ startMenuOpen: false });
+        if (this.state.startMenuOpen === true) {
+            return this.setState({ startMenuOpen: false });
+        }
     };
 
     resizeIcons = (num, imgWidth, imgHeigth) => {
@@ -67,48 +68,52 @@ class App extends Component {
         const activeWindow = Object.assign({}, newObj, { [newActive]: 104 });
         this.setState({ windowIndex: activeWindow });
     }
+    openUrlMobile = url => {
+        // Opens on mobile with onClick
+        if (window.matchMedia("(max-width: 900px)").matches) {
+            history.push(url);
+        }
+    };
+
+    openUrlDesktop = url => {
+        //  Opens on desktop with doubleClick
+        if (window.matchMedia("(min-width: 901px)").matches) {
+            history.push(url);
+        }
+    };
+
+    handleKeyPress = (e, url) => {
+        if (e.key === "Enter") {
+            history.push(url);
+        }
+    };
 
     render() {
         const { startMenuOpen } = this.state;
         return (
-            <ThemeProvider theme={LightTheme}>
+            <ThemeProvider theme={DarkTheme}>
                 <Route
                     path="/"
                     render={() => (
                         <React.Fragment>
                             <Desktop onClick={this.closeStartMenu}>
-                                testing
                                 <Route
                                     path="/mystuff"
-                                    render={() => (
-                                        <Folder>
-                                            <NameBar> namebar </NameBar>
-                                            <MenuBar>
-                                                <Link to="/mystuff/primul">
-                                                    my stuff primul
-                                                </Link>
-                                                <Link to="/mystuff/al2lea">
-                                                    my stuff/folder2
-                                                </Link>
-                                            </MenuBar>
-                                            <Route
-                                                exact
-                                                path="/mystuff/primul"
-                                                render={() => (
-                                                    <p>muhahahahahah</p>
-                                                )}
-                                            />
-                                            <Route
-                                                exact
-                                                path="/mystuff/al2lea"
-                                                render={() => (
-                                                    <p>hihihih folder</p>
-                                                )}
-                                            />
-                                        </Folder>
-                                    )}
+                                    render={() => <FolderApp />}
                                 />
-                                <Icon className="icon-container">
+                                <Icon
+                                    tabIndex="1"
+                                    onClick={() =>
+                                        this.openUrlMobile("/mystuff")
+                                    }
+                                    onDoubleClick={() =>
+                                        this.openUrlDesktop("/mystuff")
+                                    }
+                                    onKeyPress={(e, url) =>
+                                        this.handleKeyPress(e, "/mystuff")
+                                    }
+                                    className="icon-container"
+                                >
                                     <img
                                         className="icon-img"
                                         src={require("./components/desktop/img/folder-icon.png")}
@@ -118,7 +123,22 @@ class App extends Component {
                                     />
                                     <div>My Stuff</div>
                                 </Icon>
-                                <Icon className="icon-container">
+                                <Icon
+                                    tabIndex="2"
+                                    className="icon-container"
+                                    onClick={() =>
+                                        this.openUrlMobile("/mystuff/projects")
+                                    }
+                                    onDoubleClick={() =>
+                                        this.openUrlDesktop("/mystuff/projects")
+                                    }
+                                    onKeyPress={(e, url) =>
+                                        this.handleKeyPress(
+                                            e,
+                                            "/mystuff/projects"
+                                        )
+                                    }
+                                >
                                     <img
                                         className="icon-img"
                                         src={require("./components/desktop/img/folder-icon.png")}
@@ -126,9 +146,16 @@ class App extends Component {
                                         width="80px"
                                         height="60px"
                                     />
-                                    <div>My Stuff</div>
+                                    <div>Projects</div>
                                 </Icon>
-                                <Icon className="icon-container">
+                                <Icon
+                                    tabIndex="3"
+                                    className="icon-container"
+                                    onClick={() => this.openUrlMobile("/about")}
+                                    onDoubleClick={() =>
+                                        this.openUrlDesktop("/about")
+                                    }
+                                >
                                     <img
                                         className="icon-img"
                                         src={require("./components/desktop/img/folder-icon.png")}
@@ -136,9 +163,9 @@ class App extends Component {
                                         width="80px"
                                         height="60px"
                                     />
-                                    <div>My Stuff</div>
+                                    <div>About</div>
                                 </Icon>
-                                <button
+                                {/* <button
                                     onClick={() =>
                                         this.resizeIcons(4, 3.43, 2.56)
                                     }
@@ -158,7 +185,7 @@ class App extends Component {
                                     }
                                 >
                                     size 8
-                                </button>
+                                </button> */}
                                 {/* <div
                             style={{
                                 position: "absolute",
@@ -212,23 +239,11 @@ class App extends Component {
                                     </Widget>
                                 </LargeWidgetsContainer>
                             </StartMenu>
-                            <Taskbar>
-                                <ButtonContainer />
-                                <ButtonContainer>
-                                    <StartButtonImg
-                                        src={logo}
-                                        alt="logo"
-                                        onClick={this.startMenuClickHandler}
-                                    />
-                                </ButtonContainer>
-                                <ButtonContainer>
-                                    <FontAwesomeIcon
-                                        icon="long-arrow-alt-left"
-                                        color="#000"
-                                        size="2x"
-                                    />
-                                </ButtonContainer>
-                            </Taskbar>
+                            <TaskbarApp
+                                startMenuClickHandler={
+                                    this.startMenuClickHandler
+                                }
+                            />
                         </React.Fragment>
                     )}
                 />
