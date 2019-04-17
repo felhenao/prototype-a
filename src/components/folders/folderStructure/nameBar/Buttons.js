@@ -8,6 +8,10 @@ const Buttons = styled.div`
     height: 100%;
     width: 3rem;
     color: ${props => props.theme.textColor};
+    && div {
+        display: none;
+    }
+
     && a {
         display: flex;
         align-items: center;
@@ -17,10 +21,26 @@ const Buttons = styled.div`
         text-decoration: none;
         color: ${props => props.theme.textColor};
     }
-    &&:hover {
-        background: ${props =>
-            props.hoverBg ? props.hoverBg : props.theme.secundary};
-        color: ${props => (props.hoverColor ? props.hoverColor : "")};
+
+    && div:hover {
+        background: ${props => props.theme.secundary};
+    }
+
+    && :nth-child(2):hover {
+        background: #ff0000;
+    }
+    @media (min-width: 450px) {
+        width: 6rem;
+        && div {
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            width: 50%;
+            height: 100%;
+        }
+        && a {
+            width: 50%;
+        }
     }
 `;
 
