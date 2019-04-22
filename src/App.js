@@ -14,17 +14,50 @@ import {
     faLongArrowAltLeft,
     faWindowMinimize,
     faTimes,
-    faCog
+    faCog,
+    faGem,
+    faPaperPlane,
+    faAnchor,
+    faBolt,
+    faCube,
+    faLeaf,
+    faBicycle,
+    faBomb,
+    faStar
 } from "@fortawesome/free-solid-svg-icons";
-library.add(faLongArrowAltLeft, faWindowMinimize, faTimes, faCog);
+import MemoryGameApp from "./components/folders/memoryGame/MemoryGameApp";
+library.add(
+    faLongArrowAltLeft,
+    faWindowMinimize,
+    faTimes,
+    faCog,
+    faGem,
+    faPaperPlane,
+    faAnchor,
+    faBolt,
+    faCube,
+    faLeaf,
+    faBicycle,
+    faBomb,
+    faStar
+);
 
 class App extends Component {
     state = {
         startMenuOpen: false,
+        memoryGameOpen: false,
         windowIndex: {
             1: 100,
             2: 104
         }
+    };
+
+    startMemoryGame = () => {
+        this.setState({ memoryGameOpen: true });
+    };
+
+    closeMemoryGame = () => {
+        this.setState({ memoryGameOpen: false });
     };
 
     startMenuClickHandler = () => {
@@ -44,8 +77,8 @@ class App extends Component {
         Object.keys(this.state.windowIndex).forEach(() => {
             newObj.key = 100;
         });
-        const activeWindow = Object.assign({}, newObj, { [newActive]: 104 });
-        this.setState({ windowIndex: activeWindow });
+        const activedWindow = Object.assign({}, newObj, { [newActive]: 104 });
+        this.setState({ windowIndex: activedWindow });
     }
 
     openUrlMobile = url => {
@@ -79,8 +112,23 @@ class App extends Component {
                             <Desktop onClick={this.closeStartMenu}>
                                 <Route
                                     path="/mystuff"
-                                    render={() => <FolderApp />}
+                                    render={() => (
+                                        <FolderApp
+                                            windowIndex={this.state.windowIndex}
+                                            activeWindow={this.activeWindow.bind(
+                                                this
+                                            )}
+                                        />
+                                    )}
                                 />
+
+                                <MemoryGameApp
+                                    windowIndex={this.state.windowIndex}
+                                    activeWindow={this.activeWindow.bind(this)}
+                                    memoryGameOpen={this.state.memoryGameOpen}
+                                    closeMemoryGame={this.closeMemoryGame}
+                                />
+
                                 <Icon
                                     tabIndex="1"
                                     onClick={() =>
@@ -167,7 +215,11 @@ class App extends Component {
                             onClick={() => this.activeWindow(2)}
                         /> */}
                             </Desktop>
-                            <StartMenuApp startMenuOpen={startMenuOpen} />
+                            <StartMenuApp
+                                closeStartMenu={this.closeStartMenu}
+                                startMenuOpen={startMenuOpen}
+                                startMemoryGame={this.startMemoryGame}
+                            />
                             <TaskbarApp
                                 startMenuClickHandler={
                                     this.startMenuClickHandler

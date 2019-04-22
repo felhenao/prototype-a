@@ -25,7 +25,18 @@ const Buttons = styled.div`
     && div:hover {
         background: ${props => props.theme.secundary};
     }
-
+    && button {
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+        width: 100%;
+        height: 100%;
+        text-decoration: none;
+        color: ${props => props.theme.textColor};
+        background: ${props => props.theme.default};
+        border: none;
+        outline: none;
+    }
     && :nth-child(2):hover {
         background: #ff0000;
     }
@@ -39,6 +50,9 @@ const Buttons = styled.div`
             height: 100%;
         }
         && a {
+            width: 50%;
+        }
+        && button {
             width: 50%;
         }
     }
