@@ -35,16 +35,15 @@ let selected = [];
 let timer = null;
 class MemoryGameApp extends Component {
     state = {
-        cards: [...cards],
-        memoryGameOpen: true,
+        cards: [],
+        memoryGameOpen: null,
         moves: 0,
         minutes: 0,
-        seconds: 0
+        seconds: 0,
+        matchedCards: 0
     };
 
     static getDerivedStateFromProps(props, state) {
-        console.log(props.memoryGameOpen);
-
         return { memoryGameOpen: props.memoryGameOpen };
     }
 
@@ -78,8 +77,8 @@ class MemoryGameApp extends Component {
             selected = [];
             selected.push(e.target.id);
             this.movesCounter(1);
-            for (let i = 0; i < this.state.cards.length; i++) {
-                if (selected[0].includes(i) === true) {
+            this.state.cards.map((cards, index) => {
+                if (selected[0].includes(index) === true) {
                     // Get the id of the card without the card name
                     const selectedCard = selected[0].match(/\d/g).join("");
                     this.setState(prevState => ({
@@ -106,7 +105,8 @@ class MemoryGameApp extends Component {
                                     index === Number(selectedCard)
                                         ? Object.assign(obj, { match: true })
                                         : obj
-                                )
+                                ),
+                                matchedCards: prevState.matchedCards + 1
                             }));
                         }
 
@@ -119,7 +119,8 @@ class MemoryGameApp extends Component {
                                     index === Number(selectedCard)
                                         ? Object.assign(obj, { match: true })
                                         : obj
-                                )
+                                ),
+                                matchedCards: prevState.matchedCards + 1
                             }));
                         }
                         openCards = [];
@@ -160,7 +161,7 @@ class MemoryGameApp extends Component {
                         }, 650);
                     }
                 }
-            }
+            });
         }
     };
 
@@ -183,8 +184,30 @@ class MemoryGameApp extends Component {
     };
 
     restartGame = () => {
-        //    Some stuff here
-        this.setState({ moves: 0, minutes: 0, seconds: 0 });
+        const cards = [
+            { id: 1, name: "gem", open: false, match: false },
+            { id: 1, name: "gem", open: false, match: false },
+            { id: 2, name: "paper-plane", open: false, match: false },
+            { id: 2, name: "paper-plane", open: false, match: false },
+            { id: 3, name: "anchor", open: false, match: false },
+            { id: 3, name: "anchor", open: false, match: false },
+            { id: 4, name: "bolt", open: false, match: false },
+            { id: 4, name: "bolt", open: false, match: false },
+            { id: 5, name: "cube", open: false, match: false },
+            { id: 5, name: "cube", open: false, match: false },
+            { id: 6, name: "leaf", open: false, match: false },
+            { id: 6, name: "leaf", open: false, match: false },
+            { id: 7, name: "bicycle", open: false, match: false },
+            { id: 7, name: "bicycle", open: false, match: false },
+            { id: 8, name: "bomb", open: false, match: false },
+            { id: 8, name: "bomb", open: false, match: false }
+        ];
+        this.setState({ moves: 0, minutes: 0, seconds: 0, matchedCards: 0 });
+        openCards = [];
+        selected = [];
+        const deck = this.shuffle(cards);
+        this.setState({ cards: [...deck] });
+
         clearInterval(timer);
     };
 
@@ -233,6 +256,10 @@ class MemoryGameApp extends Component {
                 <BackgroundContainer>
                     <Container>
                         <ScorePanel>
+                            {/* Stop timer when all cards match */}
+                            {this.state.matchedCards === 16
+                                ? clearInterval(timer)
+                                : ""}
                             <ul>
                                 <li style={{ color: "yellow" }}>
                                     <FontAwesomeIcon icon="star" size="lg" />
@@ -264,14 +291,16 @@ class MemoryGameApp extends Component {
                             <div onClick={this.restartGame}>Restart Game</div>
                         </ScorePanel>
                         <Deck>{this.createCards()}</Deck>
-                        <ResultPopUp style={{ display: "none" }}>
+                        <ResultPopUp matchedCards={this.state.matchedCards}>
                             <h2>Well done!</h2>
                             <p>Completed in {moves} moves.</p>
-                            Time:{" "}
-                            <span>
-                                {minutes > 0 ? minutes : 0} {" : "}
-                                {seconds > 0 ? seconds : 0}
-                            </span>
+                            <p>
+                                Time:{" "}
+                                <span>
+                                    {minutes > 0 ? minutes : 0} {" : "}
+                                    {seconds > 0 ? seconds : 0}
+                                </span>
+                            </p>
                             <ul>
                                 <li style={{ color: "yellow" }}>
                                     <FontAwesomeIcon icon="star" size="lg" />
