@@ -9,6 +9,7 @@ import Desktop from "./components/desktop/Desktop";
 import Icon from "./components/desktop/Icon";
 import LightTheme from "./components/theme/Light";
 import DarkTheme from "./components/theme/Dark";
+import CalendarApp from "./components/taskbar/calendar/CalendarApp";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import {
     faLongArrowAltLeft,
@@ -54,14 +55,14 @@ library.add(
 
 class App extends Component {
     state = {
-        startMenuOpen: false,
-        memoryGameOpen: false,
+        startMenuOpen: null,
+        memoryGameOpen: null,
+        calendarOpen: null,
         windowIndex: {
             1: 100,
-            2: 104
+            2: 100
         }
     };
-
     startMemoryGame = () => {
         this.setState({ memoryGameOpen: true });
     };
@@ -79,6 +80,18 @@ class App extends Component {
     closeStartMenu = () => {
         if (this.state.startMenuOpen === true) {
             return this.setState({ startMenuOpen: false });
+        }
+    };
+
+    calendarClickHandler = () => {
+        this.setState(prevState => {
+            return { calendarOpen: !prevState.calendarOpen };
+        });
+    };
+
+    closeCalendar = () => {
+        if (this.state.calendarOpen === true) {
+            return this.setState({ calendarOpen: false });
         }
     };
 
@@ -112,30 +125,39 @@ class App extends Component {
     };
 
     render() {
-        const { startMenuOpen } = this.state;
+        const {
+            startMenuOpen,
+            windowIndex,
+            memoryGameOpen,
+            calendarOpen
+        } = this.state;
         return (
             <ThemeProvider theme={DarkTheme}>
                 <Route
                     path="/"
                     render={() => (
                         <React.Fragment>
-                            <Desktop onClick={this.closeStartMenu}>
+                            <Desktop
+                                onClick={() => {
+                                    this.closeStartMenu();
+                                    this.closeCalendar();
+                                }}
+                            >
                                 <Route
                                     path="/mystuff"
                                     render={() => (
                                         <FolderApp
-                                            windowIndex={this.state.windowIndex}
+                                            windowIndex={windowIndex}
                                             activeWindow={this.activeWindow.bind(
                                                 this
                                             )}
                                         />
                                     )}
                                 />
-
                                 <MemoryGameApp
-                                    windowIndex={this.state.windowIndex}
+                                    windowIndex={windowIndex}
                                     activeWindow={this.activeWindow.bind(this)}
-                                    memoryGameOpen={this.state.memoryGameOpen}
+                                    memoryGameOpen={memoryGameOpen}
                                     closeMemoryGame={this.closeMemoryGame}
                                 />
 
@@ -155,9 +177,7 @@ class App extends Component {
                                     <img
                                         className="icon-img"
                                         src={require("./components/desktop/img/folder-icon.png")}
-                                        alt="test"
-                                        width="80px"
-                                        height="60px"
+                                        alt="my stuff"
                                     />
                                     <div>My Stuff</div>
                                 </Icon>
@@ -178,8 +198,6 @@ class App extends Component {
                                         className="icon-img"
                                         src={require("./components/desktop/img/folder-icon.png")}
                                         alt="test"
-                                        width="80px"
-                                        height="60px"
                                     />
                                     <div>Documents</div>
                                 </Icon>
@@ -195,12 +213,11 @@ class App extends Component {
                                         className="icon-img"
                                         src={require("./components/desktop/img/folder-icon.png")}
                                         alt="test"
-                                        width="80px"
-                                        height="60px"
                                     />
                                     <div>About</div>
                                 </Icon>
                             </Desktop>
+                            <CalendarApp calendarOpen={calendarOpen} />
                             <StartMenuApp
                                 closeStartMenu={this.closeStartMenu}
                                 startMenuOpen={startMenuOpen}
@@ -210,6 +227,7 @@ class App extends Component {
                                 startMenuClickHandler={
                                     this.startMenuClickHandler
                                 }
+                                calendarClickHandler={this.calendarClickHandler}
                             />
                         </React.Fragment>
                     )}
