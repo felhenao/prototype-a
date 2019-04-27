@@ -2,9 +2,9 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import AppContainer from "../calculator/style/AppContainer";
-import NameBar from "../folderStructure/nameBar/NameBar";
-import Name from "../folderStructure/nameBar/Name";
-import Buttons from "../folderStructure/nameBar/Buttons";
+import NameBar from "../style/nameBar/NameBar";
+import Name from "../style/nameBar/Name";
+import Buttons from "../style/nameBar/Buttons";
 import Section from "./style/Section";
 import CalculatorInput from "./style/CalculatorInput";
 import Operators from "./style/Operators";
@@ -21,17 +21,12 @@ class CalculatorApp extends Component {
         prevNum: "",
         result: null,
         operator: "",
-        calculatorOpen: "close",
         close: "",
         disabled: true
     };
-    static getDerivedStateFromProps(props, state) {
-        return { calculatorOpen: props.calculatorOpen };
-    }
 
     componentDidMount() {
-        this.props.activeWindow(3);
-        this.calculateInput.focus();
+        this.props.activeWindow(2);
         if (window.matchMedia("(min-width: 35rem)").matches) {
             this.handleDrag();
         }
@@ -117,33 +112,34 @@ class CalculatorApp extends Component {
     };
 
     calculate = () => {
-        let currentNum = this.state.value;
-        if (this.state.value !== "") {
-            switch (this.state.operator) {
+        const { value, prevNum, operator } = this.state;
+        let currentNum = value;
+        if (value !== "") {
+            switch (operator) {
                 case "plus":
                     this.setState({
-                        result: +this.state.prevNum + +currentNum,
+                        result: +prevNum + +currentNum,
                         prevNum: "",
                         value: ""
                     });
                     break;
                 case "minus":
                     this.setState({
-                        result: +this.state.prevNum - +currentNum,
+                        result: +prevNum - +currentNum,
                         prevNum: "",
                         value: ""
                     });
                     break;
                 case "multiply":
                     this.setState({
-                        result: +this.state.prevNum * +currentNum,
+                        result: +prevNum * +currentNum,
                         prevNum: "",
                         value: ""
                     });
                     break;
                 case "divide":
                     this.setState({
-                        result: +this.state.prevNum / +currentNum,
+                        result: +prevNum / +currentNum,
                         prevNum: "",
                         value: ""
                     });
@@ -155,17 +151,15 @@ class CalculatorApp extends Component {
     };
 
     render() {
-        const { calculatorOpen, close, disabled } = this.state;
+        const { windowIndex, activeWindow, calculatorOpen } = this.props;
+        const { close, disabled, result, value } = this.state;
         return (
             <Draggable axis="both" handle=".handle" disabled={disabled}>
                 <AnimateFadeInOut
                     open={calculatorOpen}
                     close={close}
-                    appIndex={this.props.windowIndex[3]}
-                    style={{
-                        zIndex: this.props.windowIndex[3]
-                    }}
-                    onClick={() => this.props.activeWindow(3)}
+                    appIndex={windowIndex[2]}
+                    onClick={() => activeWindow(2)}
                 >
                     <AppContainer>
                         <NameBar>
@@ -193,17 +187,12 @@ class CalculatorApp extends Component {
                         </NameBar>
                         <Section>
                             <CalculatorInput
-                                ref={input => {
-                                    this.calculateInput = input;
-                                }}
                                 onChange={e =>
                                     this.setState({ value: e.target.value })
                                 }
-                                value={this.state.value}
+                                value={value}
                             />
-                            <Result>
-                                {this.roundResult(this.state.result)}
-                            </Result>
+                            <Result>{this.roundResult(result)}</Result>
                             <ButtonsContainer>
                                 <NumberPad>
                                     <button

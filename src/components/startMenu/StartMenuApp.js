@@ -1,19 +1,40 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
-import LargeWidgetsContainer from "./startMenuStructure/LargeWidgetsContainer";
-import SmallWidgetsContainer from "./startMenuStructure/SmallWidgetsContainer";
-import StartMenu from "./startMenuStructure/StartMenu";
-import Widget from "./startMenuStructure/Widget";
+import LargeWidgetsContainer from "./style/LargeWidgetsContainer";
+import SmallWidgetsContainer from "./style/SmallWidgetsContainer";
+import SmallWidgetBox from "./style/SmallWidgetBox";
+import StartMenu from "./style/StartMenu";
+import Widget from "./style/Widget";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const StartMenuApp = props => {
     return (
-        <StartMenu
-            display={props.startMenuOpen}
-            onClick={() => props.closeApp("startMenuOpen")}
-        >
-            <SmallWidgetsContainer />
+        <StartMenu onClick={() => props.closeApp("startMenuOpen")}>
+            <SmallWidgetsContainer>
+                <SmallWidgetBox>
+                    <Link to="#">
+                        <FontAwesomeIcon icon={["fa", "file"]} />
+                    </Link>
+                </SmallWidgetBox>
+                <SmallWidgetBox>
+                    <Link to="#">
+                        <FontAwesomeIcon icon={["fa", "address-card"]} />
+                    </Link>
+                </SmallWidgetBox>
+                <SmallWidgetBox>
+                    <Link
+                        to={
+                            window.matchMedia("(max-width: 56.25rem)").matches
+                                ? "/apps/settings"
+                                : "/apps"
+                        }
+                        onClick={() => props.startApp("settingsOpen")}
+                    >
+                        <FontAwesomeIcon icon={["fa", "cog"]} />
+                    </Link>
+                </SmallWidgetBox>
+            </SmallWidgetsContainer>
             <LargeWidgetsContainer>
                 <Widget style={{ gridArea: "widget-1" }}>
                     <Link
@@ -24,7 +45,7 @@ const StartMenuApp = props => {
                         }
                         onClick={() => props.startApp("memoryGameOpen")}
                     >
-                        <span>Memory Game</span>
+                        <span className="name">Memory Game</span>
                     </Link>
                 </Widget>
                 <Widget style={{ gridArea: "widget-2" }}>
@@ -39,7 +60,7 @@ const StartMenuApp = props => {
                         }
                         onClick={() => props.startApp("calculatorOpen")}
                     >
-                        <span>Calculator</span>
+                        <span className="name">Calculator</span>
                     </Link>
                 </Widget>
                 <Widget style={{ gridArea: "widget-4" }}>
@@ -47,13 +68,13 @@ const StartMenuApp = props => {
                 </Widget>
                 <Widget style={{ gridArea: "widget-5" }} title="github">
                     <a
-                        href="https://github.com/"
+                        href=""
                         target="_blank"
                         rel="noopener noreferrer"
                     >
                         <span>
                             <FontAwesomeIcon
-                                icon={["fab", "github-square"]}
+                                icon={["fab", "github"]}
                                 size="3x"
                             />
                         </span>
@@ -75,13 +96,13 @@ const StartMenuApp = props => {
                 </Widget>
                 <Widget style={{ gridArea: "widget-7" }} title="linkedin">
                     <a
-                        href="https://www.linkedin.com/in/"
+                        href=""
                         target="_blank"
                         rel="noopener noreferrer"
                     >
                         <span>
                             <FontAwesomeIcon
-                                icon={["fab", "linkedin"]}
+                                icon={["fab", "linkedin-in"]}
                                 size="3x"
                             />
                         </span>
@@ -118,7 +139,6 @@ const StartMenuApp = props => {
 export default StartMenuApp;
 
 StartMenuApp.propTypes = {
-    startMenuOpen: PropTypes.string.isRequired,
     closeApp: PropTypes.func.isRequired,
     startApp: PropTypes.func.isRequired
 };
