@@ -3,11 +3,11 @@ import styled, { keyframes } from "styled-components";
 const slideUp = keyframes`
 0% {
     opacity: 0;
-    transform: translateY(10%);
+    transform: translate3d(0, 10%, 0);
 }
 100% {
     opacity: 1;
-    transform: translateY(0);
+    transform: translate3d(0, 0, 0);
 }
 `;
 
@@ -17,7 +17,6 @@ const StartMenu = styled.section`
     left: 0;
     top: 0;
     width: 100%;
-    max-width: 28rem;
     height: calc(100vh - 3.5rem);
     background: ${props => props.theme.primary};
     z-index: 150;
@@ -26,6 +25,7 @@ const StartMenu = styled.section`
     @media (min-width: 28rem) {
         height: 80%;
         top: calc(20% - 3.5rem);
+        max-width: 28rem;
     }
 `;
 

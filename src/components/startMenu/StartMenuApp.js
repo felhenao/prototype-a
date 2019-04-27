@@ -1,4 +1,6 @@
 import React from "react";
+import PropTypes from "prop-types";
+import { Link } from "react-router-dom";
 import LargeWidgetsContainer from "./startMenuStructure/LargeWidgetsContainer";
 import SmallWidgetsContainer from "./startMenuStructure/SmallWidgetsContainer";
 import StartMenu from "./startMenuStructure/StartMenu";
@@ -7,26 +9,48 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const StartMenuApp = props => {
     return (
-        <StartMenu display={props.startMenuOpen} onClick={props.closeStartMenu}>
+        <StartMenu
+            display={props.startMenuOpen}
+            onClick={() => props.closeApp("startMenuOpen")}
+        >
             <SmallWidgetsContainer />
             <LargeWidgetsContainer>
-                <Widget
-                    onClick={props.startMemoryGame}
-                    style={{ gridArea: "widget-1" }}
-                >
-                    <span>Memory Game</span>
+                <Widget style={{ gridArea: "widget-1" }}>
+                    <Link
+                        to={
+                            window.matchMedia("(max-width: 56.25rem)").matches
+                                ? "/apps/memorygame"
+                                : "/apps"
+                        }
+                        onClick={() => props.startApp("memoryGameOpen")}
+                    >
+                        <span>Memory Game</span>
+                    </Link>
                 </Widget>
                 <Widget style={{ gridArea: "widget-2" }}>
                     widget 2 calendar
                 </Widget>
                 <Widget style={{ gridArea: "widget-3" }}>
-                    widget 3 calculator
+                    <Link
+                        to={
+                            window.matchMedia("(max-width: 56.25rem)").matches
+                                ? "/apps/calculator"
+                                : "/apps"
+                        }
+                        onClick={() => props.startApp("calculatorOpen")}
+                    >
+                        <span>Calculator</span>
+                    </Link>
                 </Widget>
                 <Widget style={{ gridArea: "widget-4" }}>
                     widget 4 resume
                 </Widget>
                 <Widget style={{ gridArea: "widget-5" }} title="github">
-
+                    <a
+                        href="https://github.com/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
                         <span>
                             <FontAwesomeIcon
                                 icon={["fab", "github-square"]}
@@ -37,7 +61,7 @@ const StartMenuApp = props => {
                 </Widget>
                 <Widget style={{ gridArea: "widget-6" }} title="codesandbox">
                     <a
-                        href="https://codesandbox.io/u/misshu1"
+                        href=""
                         target="_blank"
                         rel="noopener noreferrer"
                     >
@@ -51,7 +75,7 @@ const StartMenuApp = props => {
                 </Widget>
                 <Widget style={{ gridArea: "widget-7" }} title="linkedin">
                     <a
-                        href="https://www.linkedin.com/in/andreinedelus/"
+                        href="https://www.linkedin.com/in/"
                         target="_blank"
                         rel="noopener noreferrer"
                     >
@@ -64,7 +88,11 @@ const StartMenuApp = props => {
                     </a>
                 </Widget>
                 <Widget style={{ gridArea: "widget-8" }} title="instagram">
-                    
+                    <a
+                        href=""
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
                         <span>
                             <FontAwesomeIcon
                                 icon={["fab", "instagram"]}
@@ -88,3 +116,9 @@ const StartMenuApp = props => {
 };
 
 export default StartMenuApp;
+
+StartMenuApp.propTypes = {
+    startMenuOpen: PropTypes.string.isRequired,
+    closeApp: PropTypes.func.isRequired,
+    startApp: PropTypes.func.isRequired
+};

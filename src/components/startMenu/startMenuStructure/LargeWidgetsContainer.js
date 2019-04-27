@@ -2,10 +2,10 @@ import styled, { keyframes } from "styled-components";
 
 const slideUp = keyframes`
 0% {
-    transform: translateY(50%);
+    transform: translate3d(0, 15%, 0);
 }
 100% {
-    transform: translateY(0);
+    transform: translate3d(0, 0, 0);
 }
 `;
 
@@ -39,7 +39,7 @@ const LargeWidgetsContainer = styled.div`
     width: 100%;
     background: ${props => props.theme.primary};
 
-    @media (min-width: 450px) {
+    @media (min-width: 28rem) {
         width: calc(100% + 5rem);
     }
 `;

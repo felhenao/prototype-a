@@ -1,15 +1,13 @@
 import React, { Component } from "react";
 import { Route } from "react-router-dom";
-import history from "./history";
 import { ThemeProvider } from "styled-components";
-import FolderApp from "./components/folders/FolderApp";
 import TaskbarApp from "./components/taskbar/TaskbarApp";
 import StartMenuApp from "./components/startMenu/StartMenuApp";
 import Desktop from "./components/desktop/Desktop";
 import Icon from "./components/desktop/Icon";
-import LightTheme from "./components/theme/Light";
 import DarkTheme from "./components/theme/Dark";
 import CalendarApp from "./components/taskbar/calendar/CalendarApp";
+import CalculatorApp from "./components/folders/calculator/CalculatorApp";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import {
     faLongArrowAltLeft,
@@ -58,40 +56,27 @@ class App extends Component {
         startMenuOpen: "close",
         memoryGameOpen: "close",
         calendarOpen: "close",
+        calculatorOpen: "close",
         windowIndex: {
             1: 100,
-            2: 100
-        }
-    };
-    startMemoryGame = () => {
-        this.setState({ memoryGameOpen: "open" });
-    };
-
-    closeMemoryGame = () => {
-        this.setState({ memoryGameOpen: "close" });
-    };
-
-    startMenuClickHandler = () => {
-        this.state.startMenuOpen === "close"
-            ? this.setState({ startMenuOpen: "open" })
-            : this.setState({ startMenuOpen: "close" });
-    };
-
-    closeStartMenu = () => {
-        if (this.state.startMenuOpen === "open") {
-            return this.setState({ startMenuOpen: "close" });
+            2: 100,
+            3: 100
         }
     };
 
-    calendarClickHandler = () => {
-        this.state.calendarOpen === "close"
-            ? this.setState({ calendarOpen: "open" })
-            : this.setState({ calendarOpen: "close" });
+    toggleAppVisibility = key => {
+        this.state[key] === "close"
+            ? this.setState({ [key]: "open" })
+            : this.setState({ [key]: "close" });
     };
 
-    closeCalendar = () => {
-        if (this.state.calendarOpen === "open") {
-            return this.setState({ calendarOpen: "close" });
+    startApp = key => {
+        this.setState({ [key]: "open" });
+    };
+
+    closeApp = key => {
+        if (this.state[key] === "open") {
+            this.setState({ [key]: "close" });
         }
     };
 
@@ -104,32 +89,13 @@ class App extends Component {
         this.setState({ windowIndex: activedWindow });
     }
 
-    openUrlMobile = url => {
-        // Opens on mobile with onClick
-        if (window.matchMedia("(max-width: 900px)").matches) {
-            history.push(url);
-        }
-    };
-
-    openUrlDesktop = url => {
-        //  Opens on desktop with doubleClick
-        if (window.matchMedia("(min-width: 901px)").matches) {
-            history.push(url);
-        }
-    };
-
-    handleKeyPress = (e, url) => {
-        if (e.key === "Enter") {
-            history.push(url);
-        }
-    };
-
     render() {
         const {
             startMenuOpen,
             windowIndex,
             memoryGameOpen,
-            calendarOpen
+            calendarOpen,
+            calculatorOpen
         } = this.state;
         return (
             <ThemeProvider theme={DarkTheme}>
@@ -139,43 +105,91 @@ class App extends Component {
                         <React.Fragment>
                             <Desktop
                                 onClick={() => {
-                                    this.closeStartMenu();
-                                    this.closeCalendar();
+                                    this.closeApp("startMenuOpen");
+                                    this.closeApp("calendarOpen");
                                 }}
                             >
+                                {/* Desktop Routes */}
                                 <Route
-                                    path="/mystuff"
+                                    exact
+                                    path="/apps"
                                     render={() => (
-                                        <FolderApp
+                                        <React.Fragment>
+                                            {this.state.memoryGameOpen ===
+                                            "open" ? (
+                                                <MemoryGameApp
+                                                    windowIndex={windowIndex}
+                                                    activeWindow={this.activeWindow.bind(
+                                                        this
+                                                    )}
+                                                    memoryGameOpen={
+                                                        memoryGameOpen
+                                                    }
+                                                    closeApp={this.closeApp}
+                                                />
+                                            ) : (
+                                                ""
+                                            )}
+                                            {this.state.calculatorOpen ===
+                                            "open" ? (
+                                                <CalculatorApp
+                                                    windowIndex={windowIndex}
+                                                    activeWindow={this.activeWindow.bind(
+                                                        this
+                                                    )}
+                                                    calculatorOpen={
+                                                        calculatorOpen
+                                                    }
+                                                    closeApp={this.closeApp}
+                                                />
+                                            ) : (
+                                                ""
+                                            )}
+                                        </React.Fragment>
+                                    )}
+                                />
+
+                                {/* Mobile Routes */}
+                                <Route
+                                    exact
+                                    path="/apps/memorygame"
+                                    render={() => (
+                                        <MemoryGameApp
                                             windowIndex={windowIndex}
                                             activeWindow={this.activeWindow.bind(
                                                 this
                                             )}
+                                            memoryGameOpen={memoryGameOpen}
+                                            closeApp={this.closeApp}
                                         />
                                     )}
                                 />
-                                <MemoryGameApp
-                                    windowIndex={windowIndex}
-                                    activeWindow={this.activeWindow.bind(this)}
-                                    memoryGameOpen={memoryGameOpen}
-                                    closeMemoryGame={this.closeMemoryGame}
+                                <Route
+                                    exact
+                                    path="/apps/calculator"
+                                    render={() => (
+                                        <CalculatorApp
+                                            windowIndex={windowIndex}
+                                            activeWindow={this.activeWindow.bind(
+                                                this
+                                            )}
+                                            calculatorOpen={calculatorOpen}
+                                            closeApp={this.closeApp}
+                                        />
+                                    )}
                                 />
 
                                 <Icon
                                     tabIndex="1"
-                                    onClick={() =>
-                                        this.openUrlMobile("/mystuff")
-                                    }
-                                    onDoubleClick={() =>
-                                        this.openUrlDesktop("/mystuff")
-                                    }
-                                    onKeyPress={(e, url) =>
-                                        this.handleKeyPress(e, "/mystuff")
-                                    }
-                                    className="icon-container"
+                                    // onClick={() => this.openUrlMobile("/apps")}
+                                    // onDoubleClick={() =>
+                                    //     this.openUrlDesktop("/apps")
+                                    // }
+                                    // onKeyPress={(e, url) =>
+                                    //     this.handleKeyPress(e, "/apps")
+                                    // }
                                 >
                                     <img
-                                        className="icon-img"
                                         src={require("./components/desktop/img/folder-icon.png")}
                                         alt="my stuff"
                                     />
@@ -183,19 +197,17 @@ class App extends Component {
                                 </Icon>
                                 <Icon
                                     tabIndex="2"
-                                    className="icon-container"
-                                    onClick={() =>
-                                        this.openUrlMobile("/documents")
-                                    }
-                                    onDoubleClick={() =>
-                                        this.openUrlDesktop("/documents")
-                                    }
-                                    onKeyPress={(e, url) =>
-                                        this.handleKeyPress(e, "/documents")
-                                    }
+                                    // onClick={() =>
+                                    //     this.openUrlMobile("/documents")
+                                    // }
+                                    // onDoubleClick={() =>
+                                    //     this.openUrlDesktop("/documents")
+                                    // }
+                                    // onKeyPress={(e, url) =>
+                                    //     this.handleKeyPress(e, "/documents")
+                                    // }
                                 >
                                     <img
-                                        className="icon-img"
                                         src={require("./components/desktop/img/folder-icon.png")}
                                         alt="test"
                                     />
@@ -203,33 +215,28 @@ class App extends Component {
                                 </Icon>
                                 <Icon
                                     tabIndex="3"
-                                    className="icon-container"
-                                    onClick={() => this.openUrlMobile("/about")}
-                                    onDoubleClick={() =>
-                                        this.openUrlDesktop("/about")
-                                    }
+                                    // onClick={() => this.openUrlMobile("/about")}
+                                    // onDoubleClick={() =>
+                                    //     this.openUrlDesktop("/about")
+                                    // }
                                 >
                                     <img
-                                        className="icon-img"
                                         src={require("./components/desktop/img/folder-icon.png")}
                                         alt="test"
                                     />
                                     <div>About</div>
                                 </Icon>
                                 <TaskbarApp
-                                    startMenuClickHandler={
-                                        this.startMenuClickHandler
-                                    }
-                                    calendarClickHandler={
-                                        this.calendarClickHandler
+                                    toggleAppVisibility={
+                                        this.toggleAppVisibility
                                     }
                                 />
                             </Desktop>
                             <CalendarApp calendarOpen={calendarOpen} />
                             <StartMenuApp
-                                closeStartMenu={this.closeStartMenu}
+                                closeApp={this.closeApp}
                                 startMenuOpen={startMenuOpen}
-                                startMemoryGame={this.startMemoryGame}
+                                startApp={this.startApp}
                             />
                         </React.Fragment>
                     )}

@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
 import Calendar from "react-calendar/dist/entry.nostyle";
 import CalendarContainer from "./CalendarContainer";
 import CalendarStyle from "./CalendarStyle";
@@ -17,7 +18,9 @@ class CalendarApp extends Component {
     };
 
     calendar = value => this.setState({ value });
+
     goToToday = () => this.setState({ value: new Date() });
+
     componentDidMount() {
         this.update = setInterval(this.update, 1000);
     }
@@ -45,7 +48,7 @@ class CalendarApp extends Component {
         let minutes = m;
         let seconds = s;
         let session = " AM";
-        let currentMonth = [
+        const currentMonth = [
             "January",
             "February",
             "March",
@@ -59,7 +62,7 @@ class CalendarApp extends Component {
             "November",
             "December"
         ];
-        let weekDay = [
+        const weekDay = [
             "Sunday",
             "Monday",
             "Tuesday",
@@ -110,3 +113,7 @@ class CalendarApp extends Component {
 }
 
 export default CalendarApp;
+
+CalendarApp.propTypes = {
+    calendarOpen: PropTypes.string.isRequired
+};

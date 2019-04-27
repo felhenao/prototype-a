@@ -1,5 +1,7 @@
 import React, { Component } from "react";
-import Folder from "../../folders/folderStructure/Folder";
+import { Link } from "react-router-dom";
+import PropTypes from "prop-types";
+import AppContainer from "./style/AppContainer";
 import NameBar from "../../folders/folderStructure/nameBar/NameBar";
 import Name from "../../folders/folderStructure/nameBar/Name";
 import Buttons from "../../folders/folderStructure/nameBar/Buttons";
@@ -9,26 +11,9 @@ import Deck from "./style/Deck";
 import Card from "./style/Card";
 import ResultPopUp from "./style/ResultPopUp";
 import ScorePanel from "./style/ScorePanel";
+import AnimateFadeInOut from "../../animations/AnimateFadeInOut";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-
-const cards = [
-    { id: 1, name: "gem", open: false, match: false },
-    { id: 1, name: "gem", open: false, match: false },
-    { id: 2, name: "paper-plane", open: false, match: false },
-    { id: 2, name: "paper-plane", open: false, match: false },
-    { id: 3, name: "anchor", open: false, match: false },
-    { id: 3, name: "anchor", open: false, match: false },
-    { id: 4, name: "bolt", open: false, match: false },
-    { id: 4, name: "bolt", open: false, match: false },
-    { id: 5, name: "cube", open: false, match: false },
-    { id: 5, name: "cube", open: false, match: false },
-    { id: 6, name: "leaf", open: false, match: false },
-    { id: 6, name: "leaf", open: false, match: false },
-    { id: 7, name: "bicycle", open: false, match: false },
-    { id: 7, name: "bicycle", open: false, match: false },
-    { id: 8, name: "bomb", open: false, match: false },
-    { id: 8, name: "bomb", open: false, match: false }
-];
+import Draggable from "react-draggable";
 
 let openCards = [];
 let selected = [];
@@ -40,7 +25,9 @@ class MemoryGameApp extends Component {
         moves: 0,
         minutes: 0,
         seconds: 0,
-        matchedCards: 0
+        matchedCards: 0,
+        close: "",
+        disabled: true
     };
 
     static getDerivedStateFromProps(props, state) {
@@ -48,19 +35,55 @@ class MemoryGameApp extends Component {
     }
 
     componentDidMount() {
-        const deck = this.shuffle(cards);
-        this.setState({ cards: [...deck] });
+        this.setCards();
+        this.props.activeWindow(1);
+        if (window.matchMedia("(min-width: 35rem)").matches) {
+            this.handleDrag();
+        }
     }
 
     componentWillUnmount() {
-        clearInterval(this.timer);
+        this.restartGame();
     }
 
-    componentDidUpdate(prevProps) {
-        if (this.props.memoryGameOpen !== prevProps.memoryGameOpen) {
-            this.props.activeWindow(1);
-        }
+    handleDrag() {
+        this.setState({
+            disabled: false
+        });
     }
+
+    quitApp() {
+        this.setState({
+            close: "close"
+        });
+        setTimeout(() => {
+            this.props.closeApp("memoryGameOpen");
+        }, 200);
+    }
+
+    setCards = () => {
+        const cards = [
+            { id: 1, name: "gem", open: false, match: false },
+            { id: 1, name: "gem", open: false, match: false },
+            { id: 2, name: "paper-plane", open: false, match: false },
+            { id: 2, name: "paper-plane", open: false, match: false },
+            { id: 3, name: "anchor", open: false, match: false },
+            { id: 3, name: "anchor", open: false, match: false },
+            { id: 4, name: "bolt", open: false, match: false },
+            { id: 4, name: "bolt", open: false, match: false },
+            { id: 5, name: "cube", open: false, match: false },
+            { id: 5, name: "cube", open: false, match: false },
+            { id: 6, name: "leaf", open: false, match: false },
+            { id: 6, name: "leaf", open: false, match: false },
+            { id: 7, name: "bicycle", open: false, match: false },
+            { id: 7, name: "bicycle", open: false, match: false },
+            { id: 8, name: "bomb", open: false, match: false },
+            { id: 8, name: "bomb", open: false, match: false }
+        ];
+        const deck = this.shuffle(cards);
+        this.setState({ cards: [...deck] });
+    };
+
     createCards = () => {
         const create = this.state.cards.map((card, index) => (
             <Card
@@ -74,6 +97,49 @@ class MemoryGameApp extends Component {
             </Card>
         ));
         return create;
+    };
+
+    timeCounter = () => {
+        timer = setInterval(() => {
+            this.setState({ seconds: this.state.seconds + 1 });
+            if (this.state.seconds === 60) {
+                this.setState({ minutes: this.state.minutes + 1, seconds: 0 });
+            }
+        }, 1000);
+    };
+
+    movesCounter = num => {
+        this.setState(prevState => ({
+            moves: prevState.moves + num
+        }));
+        if (this.state.moves === 1) {
+            this.timeCounter();
+        }
+    };
+
+    restartGame = () => {
+        this.setState({ moves: 0, minutes: 0, seconds: 0, matchedCards: 0 });
+        openCards = [];
+        selected = [];
+        this.setCards();
+        clearInterval(timer);
+    };
+
+    // Shuffle function from http://stackoverflow.com/a/2450976
+    shuffle = array => {
+        let currentIndex = array.length,
+            temporaryValue,
+            randomIndex;
+
+        while (currentIndex !== 0) {
+            randomIndex = Math.floor(Math.random() * currentIndex);
+            currentIndex -= 1;
+            temporaryValue = array[currentIndex];
+            array[currentIndex] = array[randomIndex];
+            array[randomIndex] = temporaryValue;
+        }
+
+        return array;
     };
 
     ceckCards = e => {
@@ -171,179 +237,166 @@ class MemoryGameApp extends Component {
         }
     };
 
-    timeCounter = () => {
-        timer = setInterval(() => {
-            this.setState({ seconds: this.state.seconds + 1 });
-            if (this.state.seconds === 60) {
-                this.setState({ minutes: this.state.minutes + 1, seconds: 0 });
-            }
-        }, 1000);
-    };
-
-    movesCounter = num => {
-        this.setState(prevState => ({
-            moves: prevState.moves + num
-        }));
-        if (this.state.moves === 1) {
-            this.timeCounter();
-        }
-    };
-
-    restartGame = () => {
-        const cards = [
-            { id: 1, name: "gem", open: false, match: false },
-            { id: 1, name: "gem", open: false, match: false },
-            { id: 2, name: "paper-plane", open: false, match: false },
-            { id: 2, name: "paper-plane", open: false, match: false },
-            { id: 3, name: "anchor", open: false, match: false },
-            { id: 3, name: "anchor", open: false, match: false },
-            { id: 4, name: "bolt", open: false, match: false },
-            { id: 4, name: "bolt", open: false, match: false },
-            { id: 5, name: "cube", open: false, match: false },
-            { id: 5, name: "cube", open: false, match: false },
-            { id: 6, name: "leaf", open: false, match: false },
-            { id: 6, name: "leaf", open: false, match: false },
-            { id: 7, name: "bicycle", open: false, match: false },
-            { id: 7, name: "bicycle", open: false, match: false },
-            { id: 8, name: "bomb", open: false, match: false },
-            { id: 8, name: "bomb", open: false, match: false }
-        ];
-        this.setState({ moves: 0, minutes: 0, seconds: 0, matchedCards: 0 });
-        openCards = [];
-        selected = [];
-        const deck = this.shuffle(cards);
-        this.setState({ cards: [...deck] });
-
-        clearInterval(timer);
-    };
-
-    // Shuffle function from http://stackoverflow.com/a/2450976
-    shuffle = array => {
-        let currentIndex = array.length,
-            temporaryValue,
-            randomIndex;
-
-        while (currentIndex !== 0) {
-            randomIndex = Math.floor(Math.random() * currentIndex);
-            currentIndex -= 1;
-            temporaryValue = array[currentIndex];
-            array[currentIndex] = array[randomIndex];
-            array[randomIndex] = temporaryValue;
-        }
-
-        return array;
-    };
-
     render() {
         const {
             moves,
             seconds,
             minutes,
             memoryGameOpen,
-            matchedCards
+            matchedCards,
+            close,
+            disabled
         } = this.state;
 
         return (
-            <Folder
-                style={{
-                    display: memoryGameOpen === "open" ? "block" : "none",
-                    top: "50px",
-                    left: "50px",
-                    width: "90%",
-                    height: "80%",
-                    zIndex: this.props.windowIndex[1]
-                }}
-                onClick={() => this.props.activeWindow(1)}
+            <Draggable
+                axis="both"
+                handle=".handle"
+                position={null}
+                disabled={disabled}
             >
-                <NameBar>
-                    <Name>Memory Game</Name>
-                    <Buttons>
-                        <div>
-                            <FontAwesomeIcon icon="window-minimize" size="sm" />
-                        </div>
-                        <button onClick={this.props.closeMemoryGame}>
-                            <FontAwesomeIcon icon="times" size="lg" />
-                        </button>
-                    </Buttons>
-                </NameBar>
-                <BackgroundContainer>
-                    <Container>
-                        <ScorePanel>
-                            {/* Stop timer when all cards match */}
-                            {matchedCards === 16 ? clearInterval(timer) : ""}
-                            <ul>
-                                <li style={{ color: "yellow" }}>
-                                    <FontAwesomeIcon icon="star" size="lg" />
-                                </li>
-                                <li
-                                    style={
-                                        moves > 40
-                                            ? { color: "#fff" }
-                                            : { color: "yellow" }
+                <AnimateFadeInOut
+                    open={memoryGameOpen}
+                    close={close}
+                    appIndex={this.props.windowIndex[1]}
+                    style={{
+                        zIndex: this.props.windowIndex[1]
+                    }}
+                    onClick={() => this.props.activeWindow(1)}
+                >
+                    <AppContainer>
+                        <NameBar>
+                            <Name className="handle">Memory Game</Name>
+                            <Buttons>
+                                <div>
+                                    <FontAwesomeIcon
+                                        icon="window-minimize"
+                                        size="sm"
+                                    />
+                                </div>
+                                <Link
+                                    to={
+                                        window.matchMedia(
+                                            "(max-width: 56.25rem)"
+                                        ).matches
+                                            ? "/"
+                                            : "#"
                                     }
+                                    onClick={() => this.quitApp()}
                                 >
-                                    <FontAwesomeIcon icon="star" size="lg" />
-                                </li>
-                                <li
-                                    style={
-                                        moves > 32
-                                            ? { color: "#fff" }
-                                            : { color: "yellow" }
-                                    }
-                                >
-                                    <FontAwesomeIcon icon="star" size="lg" />
-                                </li>
-                            </ul>
-                            <span>{moves} Moves</span>
-                            <span>
-                                {minutes > 0 ? minutes : 0} {" : "}
-                                {seconds > 0 ? seconds : 0}
-                            </span>
-                            <div onClick={this.restartGame}>Restart Game</div>
-                        </ScorePanel>
-                        <Deck>{this.createCards()}</Deck>
-                        <ResultPopUp matchedCards={matchedCards}>
-                            <h2>Well done!</h2>
-                            <p>Completed in {moves} moves.</p>
-                            <p>
-                                Time:{" "}
-                                <span>
-                                    {minutes > 0 ? minutes : 0} {" : "}
-                                    {seconds > 0 ? seconds : 0}
-                                </span>
-                            </p>
-                            <ul>
-                                <li style={{ color: "yellow" }}>
-                                    <FontAwesomeIcon icon="star" size="lg" />
-                                </li>
-                                <li
-                                    style={
-                                        moves > 40
-                                            ? { color: "#fff" }
-                                            : { color: "yellow" }
-                                    }
-                                >
-                                    <FontAwesomeIcon icon="star" size="lg" />
-                                </li>
-                                <li
-                                    style={
-                                        moves > 32
-                                            ? { color: "#fff" }
-                                            : { color: "yellow" }
-                                    }
-                                >
-                                    <FontAwesomeIcon icon="star" size="lg" />
-                                </li>
-                            </ul>
-                            <button onClick={this.restartGame}>
-                                Play again!
-                            </button>
-                        </ResultPopUp>
-                    </Container>
-                </BackgroundContainer>
-            </Folder>
+                                    <FontAwesomeIcon icon="times" size="lg" />
+                                </Link>
+                            </Buttons>
+                        </NameBar>
+                        <BackgroundContainer>
+                            <Container>
+                                <ScorePanel>
+                                    {/* Stop timer when all cards match */}
+                                    {matchedCards === 16
+                                        ? clearInterval(timer)
+                                        : ""}
+                                    <ul>
+                                        <li style={{ color: "yellow" }}>
+                                            <FontAwesomeIcon
+                                                icon="star"
+                                                size="lg"
+                                            />
+                                        </li>
+                                        <li
+                                            style={
+                                                moves > 40
+                                                    ? { color: "#fff" }
+                                                    : { color: "yellow" }
+                                            }
+                                        >
+                                            <FontAwesomeIcon
+                                                icon="star"
+                                                size="lg"
+                                            />
+                                        </li>
+                                        <li
+                                            style={
+                                                moves > 32
+                                                    ? { color: "#fff" }
+                                                    : { color: "yellow" }
+                                            }
+                                        >
+                                            <FontAwesomeIcon
+                                                icon="star"
+                                                size="lg"
+                                            />
+                                        </li>
+                                    </ul>
+                                    <span>{moves} Moves</span>
+                                    <span>
+                                        {minutes > 0 ? minutes : 0} {" : "}
+                                        {seconds > 0 ? seconds : 0}
+                                    </span>
+                                    <div onClick={this.restartGame}>
+                                        Restart Game
+                                    </div>
+                                </ScorePanel>
+                                <Deck>{this.createCards()}</Deck>
+                                <ResultPopUp matchedCards={matchedCards}>
+                                    <h2>Well done!</h2>
+                                    <p>Completed in {moves} moves.</p>
+                                    <p>
+                                        Time:{" "}
+                                        <span>
+                                            {minutes > 0 ? minutes : 0} {" : "}
+                                            {seconds > 0 ? seconds : 0}
+                                        </span>
+                                    </p>
+                                    <ul>
+                                        <li style={{ color: "yellow" }}>
+                                            <FontAwesomeIcon
+                                                icon="star"
+                                                size="lg"
+                                            />
+                                        </li>
+                                        <li
+                                            style={
+                                                moves > 40
+                                                    ? { color: "#fff" }
+                                                    : { color: "yellow" }
+                                            }
+                                        >
+                                            <FontAwesomeIcon
+                                                icon="star"
+                                                size="lg"
+                                            />
+                                        </li>
+                                        <li
+                                            style={
+                                                moves > 32
+                                                    ? { color: "#fff" }
+                                                    : { color: "yellow" }
+                                            }
+                                        >
+                                            <FontAwesomeIcon
+                                                icon="star"
+                                                size="lg"
+                                            />
+                                        </li>
+                                    </ul>
+                                    <button onClick={this.restartGame}>
+                                        Play again!
+                                    </button>
+                                </ResultPopUp>
+                            </Container>
+                        </BackgroundContainer>
+                    </AppContainer>
+                </AnimateFadeInOut>
+            </Draggable>
         );
     }
 }
 
 export default MemoryGameApp;
+
+MemoryGameApp.propTypes = {
+    memoryGameOpen: PropTypes.string.isRequired,
+    activeWindow: PropTypes.func.isRequired,
+    windowIndex: PropTypes.object.isRequired,
+    closeApp: PropTypes.func.isRequired
+};
