@@ -19,7 +19,7 @@ const animate = keyframes`
 }
 
 `;
-const BorderLogo = styled.div`
+export const BorderLogo = styled.div`
     display: flex;
     align-items: center;
     box-sizing: border-box;
@@ -65,9 +65,7 @@ const BorderLogo = styled.div`
         position: absolute;
         width: 100%;
         height: 2px;
-        background: #f80012;
+        background: ${props => props.theme.logoBorder};
         animation: ${animate} 3s linear infinite;
     }
 `;
-
-export default BorderLogo;

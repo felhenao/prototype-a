@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-const Operators = styled.div`
+export const Operators = styled.div`
     display: grid;
     grid-template-rows: repeat(5, 1fr);
     && button {
@@ -11,12 +11,13 @@ const Operators = styled.div`
         outline: none;
         width: 5rem;
         font-size: 1.8rem;
-        background: #0f0f0f;
-        color: #d8d6de;
+        background: ${props => props.theme.calcOperatorButtonBg};
+        color: ${props => props.theme.textColor};
     }
     && button:hover {
-        border: 1px solid #444;
-        background: #212121;
+        border: 1px solid ${props => props.theme.folderBorder};
+        background: ${props => props.theme.calcOperatorButtonHover};
+        color: ${props => props.theme.textColor};
     }
     && button:nth-child(5) {
         background: red;
@@ -29,5 +30,3 @@ const Operators = styled.div`
         }
     }
 `;
-
-export default Operators;

@@ -1,10 +1,13 @@
 import styled from "styled-components";
 import memoryGame from "../img/memory-game.jpg";
 import calculator from "../img/calculator.png";
+import neighborhood from "../img/neighborhood-map.jpg";
+import resume from "../img/resume.jpg";
+import weather from "../img/weather.jpg";
 
-const Widget = styled.div`
+export const Widget = styled.div`
     background: #007bff;
-    color: #d6d8de;
+    color: ${props => props.theme.textColor};
     position: relative;
 
     &&:nth-child(1) {
@@ -15,6 +18,24 @@ const Widget = styled.div`
 
     &&:nth-child(3) {
         background: url(${calculator});
+        background-position: center;
+        background-size: cover;
+    }
+
+    &&:nth-child(4) {
+        background: url(${resume});
+        background-position: center;
+        background-size: cover;
+    }
+
+    &&:nth-child(9) {
+        background: url(${neighborhood});
+        background-position: center;
+        background-size: cover;
+    }
+
+    &&:nth-child(11) {
+        background: url(${weather});
         background-position: center;
         background-size: cover;
     }
@@ -95,5 +116,3 @@ const Widget = styled.div`
         }
     }
 `;
-
-export default Widget;

@@ -1,15 +1,10 @@
 import styled from "styled-components";
 
-const ClockContainer = styled.div`
+export const ClockContainer = styled.div`
     display: none;
-    @media (min-width: 450px) {
+    @media (min-width: 28rem) {
+        font-family: "Roboto", sans-serif;
         cursor: default;
-        -webkit-touch-callout: none;
-        -webkit-user-select: none;
-        -khtml-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        user-select: none;
         display: flex;
         align-items: center;
         text-align: center;
@@ -18,9 +13,7 @@ const ClockContainer = styled.div`
         width: 7rem;
         color: ${props => props.theme.textColor};
         &&:hover {
-            background: rgba(100, 100, 100, 0.3);
+            background: ${props => props.theme.clockHover};
         }
     }
 `;
-
-export default ClockContainer;

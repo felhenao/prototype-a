@@ -1,17 +1,17 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
-import AppContainer from "../calculator/style/AppContainer";
-import NameBar from "../style/nameBar/NameBar";
-import Name from "../style/nameBar/Name";
-import Buttons from "../style/nameBar/Buttons";
-import Section from "./style/Section";
-import CalculatorInput from "./style/CalculatorInput";
-import Operators from "./style/Operators";
-import ButtonsContainer from "./style/ButtonsContainer";
-import NumberPad from "./style/NumberPad";
-import Result from "./style/Result";
-import AnimateFadeInOut from "../../animations/AnimateFadeInOut";
+import {
+    AppContainer,
+    ButtonsContainer,
+    CalculatorInput,
+    NumberPad,
+    Operators,
+    Result,
+    Section
+} from "./style";
+import { Name, NameBar, Buttons } from "../style";
+import { AnimateFadeInOut } from "../../animations/style";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Draggable from "react-draggable";
 
@@ -26,7 +26,6 @@ class CalculatorApp extends Component {
     };
 
     componentDidMount() {
-        this.props.activeWindow(2);
         if (window.matchMedia("(min-width: 35rem)").matches) {
             this.handleDrag();
         }
@@ -37,7 +36,7 @@ class CalculatorApp extends Component {
             close: "close"
         });
         setTimeout(() => {
-            this.props.closeApp("calculatorOpen");
+            this.props.closeApp("calculatorOpen", "calculatorMinimize");
         }, 200);
     };
 
@@ -151,12 +150,19 @@ class CalculatorApp extends Component {
     };
 
     render() {
-        const { windowIndex, activeWindow, calculatorOpen } = this.props;
+        const {
+            windowIndex,
+            activeWindow,
+            calculatorOpen,
+            calculatorMinimize,
+            minimizeApp
+        } = this.props;
         const { close, disabled, result, value } = this.state;
         return (
             <Draggable axis="both" handle=".handle" disabled={disabled}>
                 <AnimateFadeInOut
                     open={calculatorOpen}
+                    minimize={calculatorMinimize}
                     close={close}
                     appIndex={windowIndex[2]}
                     onClick={() => activeWindow(2)}
@@ -165,7 +171,11 @@ class CalculatorApp extends Component {
                         <NameBar>
                             <Name className="handle">Calculator</Name>
                             <Buttons>
-                                <div>
+                                <div
+                                    onClick={() =>
+                                        minimizeApp("calculatorMinimize", true)
+                                    }
+                                >
                                     <FontAwesomeIcon
                                         icon="window-minimize"
                                         size="sm"

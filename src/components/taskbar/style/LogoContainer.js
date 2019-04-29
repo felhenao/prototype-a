@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-const LogoContainer = styled.div`
+export const LogoContainer = styled.div`
     position: relative;
     display: flex;
     align-items: center;
@@ -11,9 +11,7 @@ const LogoContainer = styled.div`
     @media (min-width: 450px) {
         width: 4rem;
         &&:hover {
-            background: rgba(100, 100, 100, 0.3);
+            background: ${props => props.theme.logoHover};
         }
     }
 `;
-
-export default LogoContainer;

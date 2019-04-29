@@ -1,18 +1,20 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
-import NameBar from "../style/nameBar/NameBar";
-import Name from "../style/nameBar/Name";
-import Buttons from "../style/nameBar/Buttons";
-import AnimateFadeInOut from "../../animations/AnimateFadeInOut";
-import AppContainer from "./style/AppContainer";
-import Title from "./style/Title";
-import ThemesImg from "./style/ThemesImg";
-import Wrapper from "./style/Wrapper";
-import BoxImg from "./style/BoxImg";
+import {
+    AppContainer,
+    BoxIcon,
+    BoxImg,
+    Icon,
+    ThemesImg,
+    Title,
+    Wrapper
+} from "./style";
+import darkImg from "./img/dark-preview.jpg";
+import lightImg from "./img/light-preview.jpg";
+import { Name, NameBar, Buttons } from "../style";
+import { AnimateFadeInOut } from "../../animations/style";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import Icon from "./style/Icon";
-import BoxIcon from "./style/BoxIcon";
 import Draggable from "react-draggable";
 
 class SettingsApp extends Component {
@@ -22,7 +24,6 @@ class SettingsApp extends Component {
     };
 
     componentDidMount() {
-        this.props.activeWindow(3);
         if (window.matchMedia("(min-width: 35rem)").matches) {
             this.handleDrag();
         }
@@ -33,7 +34,7 @@ class SettingsApp extends Component {
             close: "close"
         });
         setTimeout(() => {
-            this.props.closeApp("settingsOpen");
+            this.props.closeApp("settingsOpen", "settingsMinimize");
         }, 200);
     };
 
@@ -44,12 +45,19 @@ class SettingsApp extends Component {
     };
 
     render() {
-        const { windowIndex, activeWindow, settingsOpen } = this.props;
+        const {
+            windowIndex,
+            activeWindow,
+            settingsOpen,
+            minimizeApp,
+            settingsMinimize
+        } = this.props;
         const { disabled, close } = this.state;
         return (
             <Draggable axis="both" handle=".handle" disabled={disabled}>
                 <AnimateFadeInOut
                     open={settingsOpen}
+                    minimize={settingsMinimize}
                     close={close}
                     appIndex={windowIndex[3]}
                     onClick={() => activeWindow(3)}
@@ -58,7 +66,11 @@ class SettingsApp extends Component {
                         <NameBar>
                             <Name className="handle">Settings</Name>
                             <Buttons>
-                                <div>
+                                <div
+                                    onClick={() =>
+                                        minimizeApp("settingsMinimize", true)
+                                    }
+                                >
                                     <FontAwesomeIcon
                                         icon="window-minimize"
                                         size="sm"
@@ -81,12 +93,26 @@ class SettingsApp extends Component {
                         <Wrapper>
                             <Title>Themes</Title>
                             <BoxImg>
-                                <ThemesImg />
-                                <ThemesImg />
+                                <ThemesImg
+                                    src={darkImg}
+                                    onClick={() =>
+                                        this.props.changeTheme("dark")
+                                    }
+                                    alt="dark theme"
+                                />
+                                <ThemesImg
+                                    src={lightImg}
+                                    onClick={() =>
+                                        this.props.changeTheme("light")
+                                    }
+                                    alt="light theme"
+                                />
                             </BoxImg>
                             <Title>Resize App</Title>
                             <BoxIcon>
-                                <Icon>
+                                <Icon
+                                    onClick={() => this.props.changeAppSize(16)}
+                                >
                                     <img
                                         src={require("../../../components/desktop/img/folder-icon.png")}
                                         alt="100%"
@@ -95,9 +121,13 @@ class SettingsApp extends Component {
                                             height: "60px"
                                         }}
                                     />
-                                    <span>100%</span>
+                                    <span style={{ fontSize: "16px" }}>
+                                        100%
+                                    </span>
                                 </Icon>
-                                <Icon>
+                                <Icon
+                                    onClick={() => this.props.changeAppSize(12)}
+                                >
                                     <img
                                         src={require("../../../components/desktop/img/folder-icon.png")}
                                         alt="100%"
@@ -110,7 +140,9 @@ class SettingsApp extends Component {
                                         75%
                                     </span>
                                 </Icon>
-                                <Icon>
+                                <Icon
+                                    onClick={() => this.props.changeAppSize(8)}
+                                >
                                     <img
                                         src={require("../../../components/desktop/img/folder-icon.png")}
                                         alt="100%"

@@ -1,23 +1,25 @@
 import styled from "styled-components";
 
-const AppContainer = styled.section`
+export const AppContainer = styled.section`
     position: absolute;
     box-sizing: border-box;
+    padding-bottom: 3.5rem;
     top: 0;
     left: 0;
     width: 100%;
     height: calc(100vh - 3.5rem);
-    background: ${props => props.theme.secundary};
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
+    background: ${props => props.theme.background};
+    overflow-y: scroll;
+    /* Hide Scrollbar */
+    -ms-overflow-style: none;
+    &&::-webkit-scrollbar {
+        display: none;
+    }
 
     @media (min-width: 42em) {
         width: 40rem;
         height: 40rem;
+        padding-bottom: 0;
     }
 
     @media (min-width: 60em) {
@@ -27,5 +29,3 @@ const AppContainer = styled.section`
         height: 44rem;
     }
 `;
-
-export default AppContainer;

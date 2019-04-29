@@ -1,22 +1,16 @@
 import styled from "styled-components";
 
-const ClockStyleCalendar = styled.div`
+export const ClockStyleCalendar = styled.div`
     padding: 1.5rem;
     cursor: default;
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
 
     && span:nth-child(1) {
         font-size: 3rem;
-        font-weight: 300;
-        color: #fff;
+        font-weight: 100;
+        color: ${props => props.theme.calendarColorPrimary};
     }
     && span:nth-child(2) {
-        color: #bababa;
+        color: ${props => props.theme.calendarColorSecondary};
         text-transform: uppercase;
         font-size: 1.2rem;
     }
@@ -24,11 +18,9 @@ const ClockStyleCalendar = styled.div`
         width: fit-content;
         font-size: 0.9rem;
         display: block;
-        color: rgb(0, 110, 220);
+        color: ${props => props.theme.calendarTodayClock};
     }
     && span:nth-child(3):hover {
-        color: #bababa;
+        color: ${props => props.theme.calendarColorSecondary};
     }
 `;
-
-export default ClockStyleCalendar;

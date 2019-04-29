@@ -11,21 +11,21 @@ const slideUp = keyframes`
 }
 `;
 
-const StartMenu = styled.section`
+export const StartMenu = styled.section`
     position: absolute;
     display: flex;
     left: 0;
-    bottom: 3.5rem;
+    top: 0;
     width: 100%;
     height: calc(100vh - 3.5rem);
-    background: ${props => props.theme.primary};
+    background: ${props => props.theme.startMenuBg};
     z-index: 150;
     animation: ${slideUp} 0.4s ease-out 1 forwards;
 
     @media (min-width: 28rem) {
-        height: 80%;
         max-width: 28rem;
+        max-height: 45.5rem;
+        top: auto;
+        bottom: 3.5rem;
     }
 `;
-
-export default StartMenu;

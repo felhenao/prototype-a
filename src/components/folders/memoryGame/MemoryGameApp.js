@@ -1,17 +1,17 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
-import AppContainer from "./style/AppContainer";
-import NameBar from "../../folders/style/nameBar/NameBar";
-import Name from "../../folders/style/nameBar/Name";
-import Buttons from "../../folders/style/nameBar/Buttons";
-import BackgroundContainer from "./style/BackgroundContainer";
-import Container from "./style/Container";
-import Deck from "./style/Deck";
-import Card from "./style/Card";
-import ResultPopUp from "./style/ResultPopUp";
-import ScorePanel from "./style/ScorePanel";
-import AnimateFadeInOut from "../../animations/AnimateFadeInOut";
+import {
+    AppContainer,
+    BackgroundContainer,
+    Card,
+    Container,
+    Deck,
+    ResultPopUp,
+    ScorePanel
+} from "./style";
+import { Name, NameBar, Buttons } from "../style";
+import { AnimateFadeInOut } from "../../animations/style";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Draggable from "react-draggable";
 
@@ -31,7 +31,6 @@ class MemoryGameApp extends Component {
 
     componentDidMount() {
         this.setCards();
-        this.props.activeWindow(1);
         if (window.matchMedia("(min-width: 35rem)").matches) {
             this.handleDrag();
         }
@@ -52,7 +51,7 @@ class MemoryGameApp extends Component {
             close: "close"
         });
         setTimeout(() => {
-            this.props.closeApp("memoryGameOpen");
+            this.props.closeApp("memoryGameOpen", "memoryGameMinimize");
         }, 200);
     }
 
@@ -232,13 +231,19 @@ class MemoryGameApp extends Component {
                         }, 650);
                     }
                 }
-                return {};
+                return null;
             });
         }
     };
 
     render() {
-        const { memoryGameOpen, windowIndex, activeWindow } = this.props;
+        const {
+            memoryGameOpen,
+            windowIndex,
+            activeWindow,
+            memoryGameMinimize,
+            minimizeApp
+        } = this.props;
         const {
             moves,
             seconds,
@@ -257,6 +262,7 @@ class MemoryGameApp extends Component {
             >
                 <AnimateFadeInOut
                     open={memoryGameOpen}
+                    minimize={memoryGameMinimize}
                     close={close}
                     appIndex={windowIndex[1]}
                     onClick={() => activeWindow(1)}
@@ -265,7 +271,11 @@ class MemoryGameApp extends Component {
                         <NameBar>
                             <Name className="handle">Memory Game</Name>
                             <Buttons>
-                                <div>
+                                <div
+                                    onClick={() =>
+                                        minimizeApp("memoryGameMinimize", true)
+                                    }
+                                >
                                     <FontAwesomeIcon
                                         icon="window-minimize"
                                         size="sm"

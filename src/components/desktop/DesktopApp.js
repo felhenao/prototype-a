@@ -1,10 +1,8 @@
 import React, { Component, lazy, Suspense } from "react";
 import { Route } from "react-router-dom";
 import TaskbarApp from "../../components/taskbar/TaskbarApp";
-import Icon from "../../components/desktop/style/Icon";
+import { Icon, DesktopContainer } from "./style";
 import SpinnerApp from "../../components/animations/SpinnerApp";
-import DesktopContainer from "./style/DesktopContainer";
-
 const CalendarApp = lazy(() =>
     import("../../components/taskbar/calendar/CalendarApp")
 );
@@ -20,6 +18,19 @@ const CalculatorApp = lazy(() =>
 const SettingsApp = lazy(() =>
     import("../../components/folders/settings/SettingsApp")
 );
+const WeatherApp = lazy(() =>
+    import("../../components/folders/weather/WeatherApp")
+);
+const NeighborhoodApp = lazy(() =>
+    import("../../components/folders/neighborhoodMap/NeighborhoodApp")
+);
+const ResumeApp = lazy(() =>
+    import("../../components/folders/resume/ResumeApp")
+);
+const AboutApp = lazy(() => import("../../components/folders/about/AboutApp"));
+const ContactApp = lazy(() =>
+    import("../../components/folders/contact/ContactApp")
+);
 class App extends Component {
     state = {
         startMenuOpen: "close",
@@ -27,26 +38,60 @@ class App extends Component {
         calendarOpen: "close",
         calculatorOpen: "close",
         settingsOpen: "close",
+        weatherOpen: "close",
+        neighborhoodOpen: "close",
+        resumeOpen: "close",
+        aboutOpen: "close",
+        contactOpen: "close",
+        memoryGameMinimize: null,
+        calculatorMinimize: null,
+        settingsMinimize: null,
+        weatherMinimize: null,
+        neighborhoodMinimize: null,
+        resumeMinimize: null,
+        aboutMinimize: null,
+        contactMinimize: null,
+        openApps: [],
         windowIndex: {
             1: 100,
             2: 100,
-            3: 100
+            3: 100,
+            5: 100,
+            6: 100,
+            7: 100,
+            8: 100
         }
     };
 
-    toggleAppVisibility = key => {
-        this.state[key] === "close"
-            ? this.setState({ [key]: "open" })
-            : this.setState({ [key]: "close" });
+    minimizeApp = (app, boolean) => {
+        this.setState({ [app]: boolean });
     };
 
-    startApp = key => {
-        this.setState({ [key]: "open" });
+    toggleAppVisibility = app => {
+        this.state[app] === "close"
+            ? this.setState({ [app]: "open" })
+            : this.setState({ [app]: "close" });
     };
 
-    closeApp = key => {
-        if (this.state[key] === "open") {
-            this.setState({ [key]: "close" });
+    startApp = async (app, icon, zIndex, minimize) => {
+        if (this.state[app] === "close") {
+            await this.activeWindow(zIndex);
+            await this.setState(prevState => ({
+                [app]: "open",
+                openApps: [...prevState.openApps, [app, icon, zIndex, minimize]]
+            }));
+        }
+    };
+
+    closeApp = async (app, minimize) => {
+        if (this.state[app] === "open") {
+            await this.setState({ [minimize]: null });
+            await this.setState(prevState => ({
+                [app]: "close",
+                openApps: [
+                    ...prevState.openApps.filter(item => item[0] !== app)
+                ]
+            }));
         }
     };
 
@@ -63,10 +108,23 @@ class App extends Component {
         const {
             startMenuOpen,
             windowIndex,
-            memoryGameOpen,
             calendarOpen,
             calculatorOpen,
-            settingsOpen
+            memoryGameOpen,
+            memoryGameMinimize,
+            calculatorMinimize,
+            settingsOpen,
+            settingsMinimize,
+            weatherOpen,
+            weatherMinimize,
+            neighborhoodOpen,
+            neighborhoodMinimize,
+            resumeOpen,
+            resumeMinimize,
+            aboutOpen,
+            aboutMinimize,
+            contactOpen,
+            contactMinimize
         } = this.state;
         return (
             <Route
@@ -96,6 +154,12 @@ class App extends Component {
                                                         memoryGameOpen
                                                     }
                                                     closeApp={this.closeApp}
+                                                    minimizeApp={
+                                                        this.minimizeApp
+                                                    }
+                                                    memoryGameMinimize={
+                                                        memoryGameMinimize
+                                                    }
                                                 />
                                             </Suspense>
                                         ) : (
@@ -112,6 +176,12 @@ class App extends Component {
                                                         calculatorOpen
                                                     }
                                                     closeApp={this.closeApp}
+                                                    minimizeApp={
+                                                        this.minimizeApp
+                                                    }
+                                                    calculatorMinimize={
+                                                        calculatorMinimize
+                                                    }
                                                 />
                                             </Suspense>
                                         ) : (
@@ -120,12 +190,126 @@ class App extends Component {
                                         {settingsOpen === "open" ? (
                                             <Suspense fallback={<SpinnerApp />}>
                                                 <SettingsApp
+                                                    changeTheme={
+                                                        this.props.changeTheme
+                                                    }
+                                                    changeAppSize={
+                                                        this.props.changeAppSize
+                                                    }
                                                     windowIndex={windowIndex}
                                                     activeWindow={
                                                         this.activeWindow
                                                     }
-                                                    settingsOpen={settingsOpen}
                                                     closeApp={this.closeApp}
+                                                    minimizeApp={
+                                                        this.minimizeApp
+                                                    }
+                                                    settingsOpen={settingsOpen}
+                                                    settingsMinimize={
+                                                        settingsMinimize
+                                                    }
+                                                />
+                                            </Suspense>
+                                        ) : (
+                                            ""
+                                        )}
+                                        {weatherOpen === "open" ? (
+                                            <Suspense fallback={<SpinnerApp />}>
+                                                <WeatherApp
+                                                    windowIndex={windowIndex}
+                                                    activeWindow={
+                                                        this.activeWindow
+                                                    }
+                                                    closeApp={this.closeApp}
+                                                    minimizeApp={
+                                                        this.minimizeApp
+                                                    }
+                                                    weatherOpen={weatherOpen}
+                                                    weatherMinimize={
+                                                        weatherMinimize
+                                                    }
+                                                />
+                                            </Suspense>
+                                        ) : (
+                                            ""
+                                        )}
+                                        {neighborhoodOpen === "open" ? (
+                                            <Suspense fallback={<SpinnerApp />}>
+                                                <NeighborhoodApp
+                                                    windowIndex={windowIndex}
+                                                    activeWindow={
+                                                        this.activeWindow
+                                                    }
+                                                    closeApp={this.closeApp}
+                                                    minimizeApp={
+                                                        this.minimizeApp
+                                                    }
+                                                    neighborhoodMinimize={
+                                                        neighborhoodMinimize
+                                                    }
+                                                    neighborhoodOpen={
+                                                        neighborhoodOpen
+                                                    }
+                                                />
+                                            </Suspense>
+                                        ) : (
+                                            ""
+                                        )}
+                                        {resumeOpen === "open" ? (
+                                            <Suspense fallback={<SpinnerApp />}>
+                                                <ResumeApp
+                                                    windowIndex={windowIndex}
+                                                    activeWindow={
+                                                        this.activeWindow
+                                                    }
+                                                    closeApp={this.closeApp}
+                                                    minimizeApp={
+                                                        this.minimizeApp
+                                                    }
+                                                    resumeMinimize={
+                                                        resumeMinimize
+                                                    }
+                                                    resumeOpen={resumeOpen}
+                                                />
+                                            </Suspense>
+                                        ) : (
+                                            ""
+                                        )}
+                                        {aboutOpen === "open" ? (
+                                            <Suspense fallback={<SpinnerApp />}>
+                                                <AboutApp
+                                                    windowIndex={windowIndex}
+                                                    activeWindow={
+                                                        this.activeWindow
+                                                    }
+                                                    closeApp={this.closeApp}
+                                                    minimizeApp={
+                                                        this.minimizeApp
+                                                    }
+                                                    aboutMinimize={
+                                                        aboutMinimize
+                                                    }
+                                                    aboutOpen={aboutOpen}
+                                                />
+                                            </Suspense>
+                                        ) : (
+                                            ""
+                                        )}
+                                        {contactOpen === "open" ? (
+                                            <Suspense fallback={<SpinnerApp />}>
+                                                <ContactApp
+                                                    windowIndex={windowIndex}
+                                                    activeWindow={
+                                                        this.activeWindow
+                                                    }
+                                                    closeApp={this.closeApp}
+                                                    minimizeApp={
+                                                        this.minimizeApp
+                                                    }
+                                                    contactMinimize={
+                                                        contactMinimize
+                                                    }
+                                                    contactOpen={contactOpen}
                                                 />
                                             </Suspense>
                                         ) : (
@@ -146,6 +330,10 @@ class App extends Component {
                                             activeWindow={this.activeWindow}
                                             memoryGameOpen={memoryGameOpen}
                                             closeApp={this.closeApp}
+                                            minimizeApp={this.minimizeApp}
+                                            memoryGameMinimize={
+                                                memoryGameMinimize
+                                            }
                                         />
                                     </Suspense>
                                 )}
@@ -160,6 +348,10 @@ class App extends Component {
                                             activeWindow={this.activeWindow}
                                             calculatorOpen={calculatorOpen}
                                             closeApp={this.closeApp}
+                                            minimizeApp={this.minimizeApp}
+                                            calculatorMinimize={
+                                                calculatorMinimize
+                                            }
                                         />
                                     </Suspense>
                                 )}
@@ -170,14 +362,106 @@ class App extends Component {
                                 render={() => (
                                     <Suspense fallback={<SpinnerApp />}>
                                         <SettingsApp
+                                            changeTheme={this.props.changeTheme}
+                                            changeAppSize={
+                                                this.props.changeAppSize
+                                            }
                                             windowIndex={windowIndex}
                                             activeWindow={this.activeWindow}
                                             settingsOpen={settingsOpen}
                                             closeApp={this.closeApp}
+                                            minimizeApp={this.minimizeApp}
+                                            settingsMinimize={settingsMinimize}
                                         />
                                     </Suspense>
                                 )}
                             />
+                            <Route
+                                exact
+                                path="/apps/weather"
+                                render={() => (
+                                    <Suspense fallback={<SpinnerApp />}>
+                                        <WeatherApp
+                                            windowIndex={windowIndex}
+                                            activeWindow={this.activeWindow}
+                                            closeApp={this.closeApp}
+                                            minimizeApp={this.minimizeApp}
+                                            weatherOpen={weatherOpen}
+                                            weatherMinimize={weatherMinimize}
+                                        />
+                                    </Suspense>
+                                )}
+                            />
+                            <Route
+                                exact
+                                path="/apps/neighborhood-map"
+                                render={() => (
+                                    <Suspense fallback={<SpinnerApp />}>
+                                        <NeighborhoodApp
+                                            windowIndex={windowIndex}
+                                            activeWindow={this.activeWindow}
+                                            closeApp={this.closeApp}
+                                            minimizeApp={this.minimizeApp}
+                                            neighborhoodMinimize={
+                                                neighborhoodMinimize
+                                            }
+                                            neighborhoodOpen={neighborhoodOpen}
+                                        />
+                                    </Suspense>
+                                )}
+                            />
+
+                            <Route
+                                exact
+                                path="/apps/resume"
+                                render={() => (
+                                    <Suspense fallback={<SpinnerApp />}>
+                                        <ResumeApp
+                                            windowIndex={windowIndex}
+                                            activeWindow={this.activeWindow}
+                                            closeApp={this.closeApp}
+                                            minimizeApp={this.minimizeApp}
+                                            resumeMinimize={resumeMinimize}
+                                            resumeOpen={resumeOpen}
+                                        />
+                                    </Suspense>
+                                )}
+                            />
+
+                            <Route
+                                exact
+                                path="/apps/about"
+                                render={() => (
+                                    <Suspense fallback={<SpinnerApp />}>
+                                        <AboutApp
+                                            windowIndex={windowIndex}
+                                            activeWindow={this.activeWindow}
+                                            closeApp={this.closeApp}
+                                            minimizeApp={this.minimizeApp}
+                                            aboutMinimize={aboutMinimize}
+                                            aboutOpen={aboutOpen}
+                                        />
+                                    </Suspense>
+                                )}
+                            />
+
+                            <Route
+                                exact
+                                path="/apps/contact"
+                                render={() => (
+                                    <Suspense fallback={<SpinnerApp />}>
+                                        <ContactApp
+                                            windowIndex={windowIndex}
+                                            activeWindow={this.activeWindow}
+                                            closeApp={this.closeApp}
+                                            minimizeApp={this.minimizeApp}
+                                            contactMinimize={contactMinimize}
+                                            contactOpen={contactOpen}
+                                        />
+                                    </Suspense>
+                                )}
+                            />
+
                             <Icon tabIndex="1">
                                 <img
                                     src={require("../../components/desktop/img/folder-icon.png")}
@@ -201,11 +485,14 @@ class App extends Component {
                             </Icon>
                         </DesktopContainer>
                         <TaskbarApp
-                            memoryGameOpen={memoryGameOpen}
-                            calculatorOpen={calculatorOpen}
-                            settingsOpen={settingsOpen}
+                            logo={this.props.logo}
                             toggleAppVisibility={this.toggleAppVisibility}
                             closeApp={this.closeApp}
+                            startApp={this.startApp}
+                            minimizeApp={this.minimizeApp}
+                            minimize={this.state.minimize}
+                            activeWindow={this.activeWindow}
+                            desktopState={this.state}
                         />
                         {calendarOpen === "open" ? (
                             <Suspense fallback={<SpinnerApp />}>
@@ -219,6 +506,7 @@ class App extends Component {
                                 <StartMenuApp
                                     closeApp={this.closeApp}
                                     startApp={this.startApp}
+                                    removeIcon={this.removeIcon}
                                 />
                             </Suspense>
                         ) : (

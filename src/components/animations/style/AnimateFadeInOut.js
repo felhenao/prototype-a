@@ -22,8 +22,36 @@ const fadeOut = keyframes`
 }
 `;
 
+const minimizeDown = keyframes`
+0% {
+    opacity: 1;
+    transform: scale3d(1, 1, 1) translate3d(0, 0, 0);
+    transform-origin: 50% 100%;
+}
+100% {
+    opacity: 0;
+    display: none;
+    transform: scale3d(0, 1, 1) translate3d(0, 55rem, 0);
+}
+`;
+
+const minimizeUp = keyframes`
+0% {
+    opacity: 0;
+    display: block;
+    transform: scale3d(0, 1, 1) translate3d(0, 55rem, 0);
+    transform-origin: 50% 100%;
+
+}
+100% {
+    opacity: 1;
+    transform: scale3d(1, 1, 1) translate3d(0, 0, 0);
+    transform-origin: 50% 100%;
+}
+`;
+
 // Child element must be a 'section' element
-const AnimateFadeInOut = styled.div`
+export const AnimateFadeInOut = styled.div`
     min-width: fit-content;
     min-height: fit-content;
     z-index: ${props => props.appIndex};
@@ -36,6 +64,16 @@ const AnimateFadeInOut = styled.div`
                     props.open === "open" &&
                     css`
                         animation: ${fadeIn} 0.2s ease-out 1 forwards;
+                    `}
+                ${props =>
+                    props.minimize === true &&
+                    css`
+                        animation: ${minimizeDown} 0.3s ease-in 1 forwards;
+                    `}
+                ${props =>
+                    props.minimize === false &&
+                    css`
+                        animation: ${minimizeUp} 0.3s ease-out 1 forwards;
                     `}
                 ${props =>
                     props.close === "close" &&
@@ -53,5 +91,3 @@ const AnimateFadeInOut = styled.div`
         }
     }
 `;
-
-export default AnimateFadeInOut;

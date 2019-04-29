@@ -1,10 +1,9 @@
 import styled from "styled-components";
 
-const Buttons = styled.div`
+export const Buttons = styled.div`
     display: flex;
     align-items: center;
     justify-content: space-around;
-    background: ${props => props.theme.default};
     height: 100%;
     width: 3rem;
     color: ${props => props.theme.textColor};
@@ -21,17 +20,18 @@ const Buttons = styled.div`
         height: 100%;
         text-decoration: none;
         cursor: default;
-        color: ${props => props.theme.textColor};
+        color: #d6d8de;
     }
 
     && div:hover {
-        background: ${props => props.theme.secundary};
+        background: ${props => props.theme.folderNameBarBtnHover};
     }
 
     && :nth-child(2):hover {
         background: #ff0000;
+        color: #d6d8de;
     }
-    @media (min-width: 450px) {
+    @media (min-width: 28rem) {
         width: 6rem;
         && div {
             display: flex;
@@ -42,9 +42,8 @@ const Buttons = styled.div`
         }
         && a {
             width: 50%;
+            color: ${props => props.theme.textColor};
             background: transparent;
         }
     }
 `;
-
-export default Buttons;
