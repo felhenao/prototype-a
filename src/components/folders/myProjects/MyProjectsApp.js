@@ -2,13 +2,12 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import { AppContainer } from "./style";
-
 import { Name, NameBar, Buttons } from "../style";
 import { AnimateFadeInOut } from "../../animations/style";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Draggable from "react-draggable";
 
-class WeatherApp extends Component {
+class MyProjects extends Component {
     state = {
         close: "",
         disabled: true
@@ -25,7 +24,7 @@ class WeatherApp extends Component {
             close: "close"
         });
         setTimeout(() => {
-            this.props.closeApp("weatherOpen", "weatherMinimize");
+            this.props.closeApp("myProjectsOpen", "myProjectsMinimize");
         }, 200);
     };
 
@@ -40,26 +39,26 @@ class WeatherApp extends Component {
             windowIndex,
             activeWindow,
             minimizeApp,
-            weatherOpen,
-            weatherMinimize
+            myProjectsOpen,
+            myProjectsMinimize
         } = this.props;
         const { disabled, close } = this.state;
         return (
             <Draggable axis="both" handle=".handle" disabled={disabled}>
                 <AnimateFadeInOut
-                    open={weatherOpen}
-                    minimize={weatherMinimize}
+                    open={myProjectsOpen}
+                    minimize={myProjectsMinimize}
                     close={close}
-                    appIndex={windowIndex[4]}
-                    onClick={() => activeWindow(4)}
+                    appIndex={windowIndex[9]}
+                    onClick={() => activeWindow(9)}
                 >
                     <AppContainer>
                         <NameBar>
-                            <Name className="handle">Weather</Name>
+                            <Name className="handle">My Projects</Name>
                             <Buttons>
                                 <div
                                     onClick={() =>
-                                        minimizeApp("weatherMinimize", true)
+                                        minimizeApp("myProjectsMinimize", true)
                                     }
                                 >
                                     <FontAwesomeIcon
@@ -80,18 +79,18 @@ class WeatherApp extends Component {
                                 </Link>
                             </Buttons>
                         </NameBar>
-                        Under Construction weather app
+                        Under Construction My Projects
                     </AppContainer>
                 </AnimateFadeInOut>
             </Draggable>
         );
     }
 }
-export default WeatherApp;
+export default MyProjects;
 
-WeatherApp.propTypes = {
+MyProjects.propTypes = {
     windowIndex: PropTypes.object.isRequired,
-    weatherOpen: PropTypes.string.isRequired,
+    myProjectsOpen: PropTypes.string.isRequired,
     activeWindow: PropTypes.func.isRequired,
     minimizeApp: PropTypes.func.isRequired,
     closeApp: PropTypes.func.isRequired

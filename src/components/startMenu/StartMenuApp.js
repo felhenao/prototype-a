@@ -25,7 +25,7 @@ const StartMenuApp = props => {
                 <SmallWidgetBox>
                     <Link
                         to={
-                            window.matchMedia("(max-width: 56.25rem)").matches
+                            window.matchMedia("(max-width: 28rem)").matches
                                 ? "/apps/about"
                                 : "/apps"
                         }
@@ -44,7 +44,7 @@ const StartMenuApp = props => {
                 <SmallWidgetBox>
                     <Link
                         to={
-                            window.matchMedia("(max-width: 56.25rem)").matches
+                            window.matchMedia("(max-width: 28rem)").matches
                                 ? "/apps/contact"
                                 : "/apps"
                         }
@@ -63,7 +63,7 @@ const StartMenuApp = props => {
                 <SmallWidgetBox>
                     <Link
                         to={
-                            window.matchMedia("(max-width: 56.25rem)").matches
+                            window.matchMedia("(max-width: 28rem)").matches
                                 ? "/apps/settings"
                                 : "/apps"
                         }
@@ -84,7 +84,7 @@ const StartMenuApp = props => {
                 <Widget style={{ gridArea: "widget-1" }}>
                     <Link
                         to={
-                            window.matchMedia("(max-width: 56.25rem)").matches
+                            window.matchMedia("(max-width: 28rem)").matches
                                 ? "/apps/memorygame"
                                 : "/apps"
                         }
@@ -106,7 +106,7 @@ const StartMenuApp = props => {
                 <Widget style={{ gridArea: "widget-3" }}>
                     <Link
                         to={
-                            window.matchMedia("(max-width: 56.25rem)").matches
+                            window.matchMedia("(max-width: 28rem)").matches
                                 ? "/apps/calculator"
                                 : "/apps"
                         }
@@ -122,7 +122,25 @@ const StartMenuApp = props => {
                         <span className="name">Calculator</span>
                     </Link>
                 </Widget>
-
+                <Widget style={{ gridArea: "widget-4" }}>
+                    <Link
+                        to={
+                            window.matchMedia("(max-width: 28rem)").matches
+                                ? "/apps/resume"
+                                : "/apps"
+                        }
+                        onClick={() =>
+                            props.startApp(
+                                "resumeOpen",
+                                resumeIcon,
+                                6,
+                                "resumeMinimize"
+                            )
+                        }
+                    >
+                        <span className="name">Resume</span>
+                    </Link>
+                </Widget>
                 <Widget style={{ gridArea: "widget-5" }} title="github">
                     <a
                         href=""
@@ -137,7 +155,7 @@ const StartMenuApp = props => {
                         </span>
                     </a>
                 </Widget>
-                <Widget style={{ gridArea: "widget-6" }} title="codesandbox">
+                <Widget style={{ gridArea: "widget-6" }} title="">
                     <a
                         href=""
                         target="_blank"
@@ -159,18 +177,67 @@ const StartMenuApp = props => {
                     >
                         <span>
                             <FontAwesomeIcon
-                                icon={["fab", ""]}
+                                icon={["fab", "linkedin-in"]}
                                 size="3x"
                             />
                         </span>
                     </a>
                 </Widget>
-
-
+                <Widget style={{ gridArea: "widget-8" }} title="instagram">
+                    <a
+                        href=""
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        <span>
+                            <FontAwesomeIcon
+                                icon={["fab", "instagram"]}
+                                size="3x"
+                            />
+                        </span>
+                    </a>
+                </Widget>
+                <Widget style={{ gridArea: "widget-9" }}>
+                    <Link
+                        to={
+                            window.matchMedia("(max-width: 28rem)").matches
+                                ? "/apps/neighborhood-map"
+                                : "/apps"
+                        }
+                        onClick={() =>
+                            props.startApp(
+                                "neighborhoodOpen",
+                                neighborhoodIcon,
+                                5,
+                                "neighborhoodMinimize"
+                            )
+                        }
+                    >
+                        <span className="name">Neighborhood Map</span>
+                    </Link>
+                </Widget>
                 <Widget style={{ gridArea: "widget-10" }}>
                     widget 10 notepad
                 </Widget>
-
+                <Widget style={{ gridArea: "widget-11" }}>
+                    <Link
+                        to={
+                            window.matchMedia("(max-width: 28rem)").matches
+                                ? "/apps/weather"
+                                : "/apps"
+                        }
+                        onClick={() =>
+                            props.startApp(
+                                "weatherOpen",
+                                weatherIcon,
+                                4,
+                                "weatherMinimize"
+                            )
+                        }
+                    >
+                        <span className="name">Weather</span>
+                    </Link>
+                </Widget>
             </LargeWidgetsContainer>
         </StartMenu>
     );
