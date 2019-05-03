@@ -1,7 +1,10 @@
 import React, { Component, lazy, Suspense } from "react";
-import { Route } from "react-router-dom";
+import { Route, Link } from "react-router-dom";
 import TaskbarApp from "../../components/taskbar/TaskbarApp";
 import { Icon, DesktopContainer } from "./style";
+import aboutIcon from "../../components/taskbar/img/about-icon-taskbar.jpg";
+import myProjectsIcon from "../../components/taskbar/img/my-projects-icon-taskbar.jpg";
+import contactIcon from "../../components/taskbar/img/contact-icon-taskbar.jpg";
 import SpinnerApp from "../../components/animations/SpinnerApp";
 const CalendarApp = lazy(() =>
     import("../../components/taskbar/calendar/CalendarApp")
@@ -31,6 +34,10 @@ const AboutApp = lazy(() => import("../../components/folders/about/AboutApp"));
 const ContactApp = lazy(() =>
     import("../../components/folders/contact/ContactApp")
 );
+const MyProjectsApp = lazy(() =>
+    import("../../components/folders/myProjects/MyProjectsApp")
+);
+
 class App extends Component {
     state = {
         startMenuOpen: "close",
@@ -43,6 +50,7 @@ class App extends Component {
         resumeOpen: "close",
         aboutOpen: "close",
         contactOpen: "close",
+        myProjectsOpen: "close",
         memoryGameMinimize: null,
         calculatorMinimize: null,
         settingsMinimize: null,
@@ -51,6 +59,7 @@ class App extends Component {
         resumeMinimize: null,
         aboutMinimize: null,
         contactMinimize: null,
+        myProjectsMinimize: null,
         openApps: [],
         windowIndex: {
             1: 100,
@@ -59,7 +68,8 @@ class App extends Component {
             5: 100,
             6: 100,
             7: 100,
-            8: 100
+            8: 100,
+            9: 100
         }
     };
 
@@ -124,7 +134,9 @@ class App extends Component {
             aboutOpen,
             aboutMinimize,
             contactOpen,
-            contactMinimize
+            contactMinimize,
+            myProjectsOpen,
+            myProjectsMinimize
         } = this.state;
         return (
             <Route
@@ -137,351 +149,352 @@ class App extends Component {
                                 this.closeApp("calendarOpen");
                             }}
                         >
-                            {/* Desktop Routes */}
                             <Route
                                 exact
-                                path="/apps"
+                                path={
+                                    window.matchMedia("(max-width: 28rem)")
+                                        .matches
+                                        ? "/apps/memorygame"
+                                        : "/apps"
+                                }
                                 render={() => (
-                                    <React.Fragment>
+                                    <Suspense fallback={<SpinnerApp />}>
                                         {memoryGameOpen === "open" ? (
-                                            <Suspense fallback={<SpinnerApp />}>
-                                                <MemoryGameApp
-                                                    windowIndex={windowIndex}
-                                                    activeWindow={
-                                                        this.activeWindow
-                                                    }
-                                                    memoryGameOpen={
-                                                        memoryGameOpen
-                                                    }
-                                                    closeApp={this.closeApp}
-                                                    minimizeApp={
-                                                        this.minimizeApp
-                                                    }
-                                                    memoryGameMinimize={
-                                                        memoryGameMinimize
-                                                    }
-                                                />
-                                            </Suspense>
+                                            <MemoryGameApp
+                                                windowIndex={windowIndex}
+                                                activeWindow={this.activeWindow}
+                                                memoryGameOpen={memoryGameOpen}
+                                                closeApp={this.closeApp}
+                                                minimizeApp={this.minimizeApp}
+                                                memoryGameMinimize={
+                                                    memoryGameMinimize
+                                                }
+                                            />
                                         ) : (
                                             ""
                                         )}
+                                    </Suspense>
+                                )}
+                            />
+                            <Route
+                                exact
+                                path={
+                                    window.matchMedia("(max-width: 28rem)")
+                                        .matches
+                                        ? "/apps/calculator"
+                                        : "/apps"
+                                }
+                                render={() => (
+                                    <Suspense fallback={<SpinnerApp />}>
                                         {calculatorOpen === "open" ? (
-                                            <Suspense fallback={<SpinnerApp />}>
-                                                <CalculatorApp
-                                                    windowIndex={windowIndex}
-                                                    activeWindow={
-                                                        this.activeWindow
-                                                    }
-                                                    calculatorOpen={
-                                                        calculatorOpen
-                                                    }
-                                                    closeApp={this.closeApp}
-                                                    minimizeApp={
-                                                        this.minimizeApp
-                                                    }
-                                                    calculatorMinimize={
-                                                        calculatorMinimize
-                                                    }
-                                                />
-                                            </Suspense>
+                                            <CalculatorApp
+                                                windowIndex={windowIndex}
+                                                activeWindow={this.activeWindow}
+                                                calculatorOpen={calculatorOpen}
+                                                closeApp={this.closeApp}
+                                                minimizeApp={this.minimizeApp}
+                                                calculatorMinimize={
+                                                    calculatorMinimize
+                                                }
+                                            />
                                         ) : (
                                             ""
                                         )}
+                                    </Suspense>
+                                )}
+                            />
+                            <Route
+                                exact
+                                path={
+                                    window.matchMedia("(max-width: 28rem)")
+                                        .matches
+                                        ? "/apps/settings"
+                                        : "/apps"
+                                }
+                                render={() => (
+                                    <Suspense fallback={<SpinnerApp />}>
                                         {settingsOpen === "open" ? (
-                                            <Suspense fallback={<SpinnerApp />}>
-                                                <SettingsApp
-                                                    changeTheme={
-                                                        this.props.changeTheme
-                                                    }
-                                                    changeAppSize={
-                                                        this.props.changeAppSize
-                                                    }
-                                                    windowIndex={windowIndex}
-                                                    activeWindow={
-                                                        this.activeWindow
-                                                    }
-                                                    closeApp={this.closeApp}
-                                                    minimizeApp={
-                                                        this.minimizeApp
-                                                    }
-                                                    settingsOpen={settingsOpen}
-                                                    settingsMinimize={
-                                                        settingsMinimize
-                                                    }
-                                                />
-                                            </Suspense>
+                                            <SettingsApp
+                                                changeTheme={
+                                                    this.props.changeTheme
+                                                }
+                                                changeAppSize={
+                                                    this.props.changeAppSize
+                                                }
+                                                windowIndex={windowIndex}
+                                                activeWindow={this.activeWindow}
+                                                settingsOpen={settingsOpen}
+                                                closeApp={this.closeApp}
+                                                minimizeApp={this.minimizeApp}
+                                                settingsMinimize={
+                                                    settingsMinimize
+                                                }
+                                            />
                                         ) : (
                                             ""
                                         )}
+                                    </Suspense>
+                                )}
+                            />
+                            <Route
+                                exact
+                                path={
+                                    window.matchMedia("(max-width: 28rem)")
+                                        .matches
+                                        ? "/apps/weather"
+                                        : "/apps"
+                                }
+                                render={() => (
+                                    <Suspense fallback={<SpinnerApp />}>
                                         {weatherOpen === "open" ? (
-                                            <Suspense fallback={<SpinnerApp />}>
-                                                <WeatherApp
-                                                    windowIndex={windowIndex}
-                                                    activeWindow={
-                                                        this.activeWindow
-                                                    }
-                                                    closeApp={this.closeApp}
-                                                    minimizeApp={
-                                                        this.minimizeApp
-                                                    }
-                                                    weatherOpen={weatherOpen}
-                                                    weatherMinimize={
-                                                        weatherMinimize
-                                                    }
-                                                />
-                                            </Suspense>
+                                            <WeatherApp
+                                                windowIndex={windowIndex}
+                                                activeWindow={this.activeWindow}
+                                                closeApp={this.closeApp}
+                                                minimizeApp={this.minimizeApp}
+                                                weatherOpen={weatherOpen}
+                                                weatherMinimize={
+                                                    weatherMinimize
+                                                }
+                                            />
                                         ) : (
                                             ""
                                         )}
+                                    </Suspense>
+                                )}
+                            />
+                            <Route
+                                exact
+                                path={
+                                    window.matchMedia("(max-width: 28rem)")
+                                        .matches
+                                        ? "/apps/neighborhood-map"
+                                        : "/apps"
+                                }
+                                render={() => (
+                                    <Suspense fallback={<SpinnerApp />}>
                                         {neighborhoodOpen === "open" ? (
-                                            <Suspense fallback={<SpinnerApp />}>
-                                                <NeighborhoodApp
-                                                    windowIndex={windowIndex}
-                                                    activeWindow={
-                                                        this.activeWindow
-                                                    }
-                                                    closeApp={this.closeApp}
-                                                    minimizeApp={
-                                                        this.minimizeApp
-                                                    }
-                                                    neighborhoodMinimize={
-                                                        neighborhoodMinimize
-                                                    }
-                                                    neighborhoodOpen={
-                                                        neighborhoodOpen
-                                                    }
-                                                />
-                                            </Suspense>
+                                            <NeighborhoodApp
+                                                windowIndex={windowIndex}
+                                                activeWindow={this.activeWindow}
+                                                closeApp={this.closeApp}
+                                                minimizeApp={this.minimizeApp}
+                                                neighborhoodMinimize={
+                                                    neighborhoodMinimize
+                                                }
+                                                neighborhoodOpen={
+                                                    neighborhoodOpen
+                                                }
+                                            />
                                         ) : (
                                             ""
                                         )}
+                                    </Suspense>
+                                )}
+                            />
+
+                            <Route
+                                exact
+                                path={
+                                    window.matchMedia("(max-width: 28rem)")
+                                        .matches
+                                        ? "/apps/resume"
+                                        : "/apps"
+                                }
+                                render={() => (
+                                    <Suspense fallback={<SpinnerApp />}>
                                         {resumeOpen === "open" ? (
-                                            <Suspense fallback={<SpinnerApp />}>
-                                                <ResumeApp
-                                                    windowIndex={windowIndex}
-                                                    activeWindow={
-                                                        this.activeWindow
-                                                    }
-                                                    closeApp={this.closeApp}
-                                                    minimizeApp={
-                                                        this.minimizeApp
-                                                    }
-                                                    resumeMinimize={
-                                                        resumeMinimize
-                                                    }
-                                                    resumeOpen={resumeOpen}
-                                                />
-                                            </Suspense>
+                                            <ResumeApp
+                                                windowIndex={windowIndex}
+                                                activeWindow={this.activeWindow}
+                                                closeApp={this.closeApp}
+                                                minimizeApp={this.minimizeApp}
+                                                resumeMinimize={resumeMinimize}
+                                                resumeOpen={resumeOpen}
+                                            />
                                         ) : (
                                             ""
                                         )}
+                                    </Suspense>
+                                )}
+                            />
+
+                            <Route
+                                exact
+                                path={
+                                    window.matchMedia("(max-width: 28rem)")
+                                        .matches
+                                        ? "/apps/about"
+                                        : "/apps"
+                                }
+                                render={() => (
+                                    <Suspense fallback={<SpinnerApp />}>
                                         {aboutOpen === "open" ? (
-                                            <Suspense fallback={<SpinnerApp />}>
-                                                <AboutApp
-                                                    windowIndex={windowIndex}
-                                                    activeWindow={
-                                                        this.activeWindow
-                                                    }
-                                                    closeApp={this.closeApp}
-                                                    minimizeApp={
-                                                        this.minimizeApp
-                                                    }
-                                                    aboutMinimize={
-                                                        aboutMinimize
-                                                    }
-                                                    aboutOpen={aboutOpen}
-                                                />
-                                            </Suspense>
+                                            <AboutApp
+                                                windowIndex={windowIndex}
+                                                activeWindow={this.activeWindow}
+                                                closeApp={this.closeApp}
+                                                minimizeApp={this.minimizeApp}
+                                                aboutMinimize={aboutMinimize}
+                                                aboutOpen={aboutOpen}
+                                            />
                                         ) : (
                                             ""
                                         )}
+                                    </Suspense>
+                                )}
+                            />
+
+                            <Route
+                                exact
+                                path={
+                                    window.matchMedia("(max-width: 28rem)")
+                                        .matches
+                                        ? "/apps/contact"
+                                        : "/apps"
+                                }
+                                render={() => (
+                                    <Suspense fallback={<SpinnerApp />}>
                                         {contactOpen === "open" ? (
-                                            <Suspense fallback={<SpinnerApp />}>
-                                                <ContactApp
-                                                    windowIndex={windowIndex}
-                                                    activeWindow={
-                                                        this.activeWindow
-                                                    }
-                                                    closeApp={this.closeApp}
-                                                    minimizeApp={
-                                                        this.minimizeApp
-                                                    }
-                                                    contactMinimize={
-                                                        contactMinimize
-                                                    }
-                                                    contactOpen={contactOpen}
-                                                />
-                                            </Suspense>
+                                            <ContactApp
+                                                windowIndex={windowIndex}
+                                                activeWindow={this.activeWindow}
+                                                closeApp={this.closeApp}
+                                                minimizeApp={this.minimizeApp}
+                                                contactMinimize={
+                                                    contactMinimize
+                                                }
+                                                contactOpen={contactOpen}
+                                            />
                                         ) : (
                                             ""
                                         )}
-                                    </React.Fragment>
-                                )}
-                            />
-
-                            {/* Mobile Routes */}
-                            <Route
-                                exact
-                                path="/apps/memorygame"
-                                render={() => (
-                                    <Suspense fallback={<SpinnerApp />}>
-                                        <MemoryGameApp
-                                            windowIndex={windowIndex}
-                                            activeWindow={this.activeWindow}
-                                            memoryGameOpen={memoryGameOpen}
-                                            closeApp={this.closeApp}
-                                            minimizeApp={this.minimizeApp}
-                                            memoryGameMinimize={
-                                                memoryGameMinimize
-                                            }
-                                        />
                                     </Suspense>
                                 )}
                             />
                             <Route
                                 exact
-                                path="/apps/calculator"
+                                path={
+                                    window.matchMedia("(max-width: 28rem)")
+                                        .matches
+                                        ? "/apps/myprojects"
+                                        : "/apps"
+                                }
                                 render={() => (
                                     <Suspense fallback={<SpinnerApp />}>
-                                        <CalculatorApp
-                                            windowIndex={windowIndex}
-                                            activeWindow={this.activeWindow}
-                                            calculatorOpen={calculatorOpen}
-                                            closeApp={this.closeApp}
-                                            minimizeApp={this.minimizeApp}
-                                            calculatorMinimize={
-                                                calculatorMinimize
-                                            }
-                                        />
-                                    </Suspense>
-                                )}
-                            />
-                            <Route
-                                exact
-                                path="/apps/settings"
-                                render={() => (
-                                    <Suspense fallback={<SpinnerApp />}>
-                                        <SettingsApp
-                                            changeTheme={this.props.changeTheme}
-                                            changeAppSize={
-                                                this.props.changeAppSize
-                                            }
-                                            windowIndex={windowIndex}
-                                            activeWindow={this.activeWindow}
-                                            settingsOpen={settingsOpen}
-                                            closeApp={this.closeApp}
-                                            minimizeApp={this.minimizeApp}
-                                            settingsMinimize={settingsMinimize}
-                                        />
-                                    </Suspense>
-                                )}
-                            />
-                            <Route
-                                exact
-                                path="/apps/weather"
-                                render={() => (
-                                    <Suspense fallback={<SpinnerApp />}>
-                                        <WeatherApp
-                                            windowIndex={windowIndex}
-                                            activeWindow={this.activeWindow}
-                                            closeApp={this.closeApp}
-                                            minimizeApp={this.minimizeApp}
-                                            weatherOpen={weatherOpen}
-                                            weatherMinimize={weatherMinimize}
-                                        />
-                                    </Suspense>
-                                )}
-                            />
-                            <Route
-                                exact
-                                path="/apps/neighborhood-map"
-                                render={() => (
-                                    <Suspense fallback={<SpinnerApp />}>
-                                        <NeighborhoodApp
-                                            windowIndex={windowIndex}
-                                            activeWindow={this.activeWindow}
-                                            closeApp={this.closeApp}
-                                            minimizeApp={this.minimizeApp}
-                                            neighborhoodMinimize={
-                                                neighborhoodMinimize
-                                            }
-                                            neighborhoodOpen={neighborhoodOpen}
-                                        />
+                                        {myProjectsOpen === "open" ? (
+                                            <MyProjectsApp
+                                                windowIndex={windowIndex}
+                                                activeWindow={this.activeWindow}
+                                                myProjectsOpen={myProjectsOpen}
+                                                closeApp={this.closeApp}
+                                                minimizeApp={this.minimizeApp}
+                                                myProjectsMinimize={
+                                                    myProjectsMinimize
+                                                }
+                                            />
+                                        ) : (
+                                            ""
+                                        )}
                                     </Suspense>
                                 )}
                             />
 
-                            <Route
-                                exact
-                                path="/apps/resume"
-                                render={() => (
-                                    <Suspense fallback={<SpinnerApp />}>
-                                        <ResumeApp
-                                            windowIndex={windowIndex}
-                                            activeWindow={this.activeWindow}
-                                            closeApp={this.closeApp}
-                                            minimizeApp={this.minimizeApp}
-                                            resumeMinimize={resumeMinimize}
-                                            resumeOpen={resumeOpen}
-                                        />
-                                    </Suspense>
-                                )}
-                            />
-
-                            <Route
-                                exact
-                                path="/apps/about"
-                                render={() => (
-                                    <Suspense fallback={<SpinnerApp />}>
-                                        <AboutApp
-                                            windowIndex={windowIndex}
-                                            activeWindow={this.activeWindow}
-                                            closeApp={this.closeApp}
-                                            minimizeApp={this.minimizeApp}
-                                            aboutMinimize={aboutMinimize}
-                                            aboutOpen={aboutOpen}
-                                        />
-                                    </Suspense>
-                                )}
-                            />
-
-                            <Route
-                                exact
-                                path="/apps/contact"
-                                render={() => (
-                                    <Suspense fallback={<SpinnerApp />}>
-                                        <ContactApp
-                                            windowIndex={windowIndex}
-                                            activeWindow={this.activeWindow}
-                                            closeApp={this.closeApp}
-                                            minimizeApp={this.minimizeApp}
-                                            contactMinimize={contactMinimize}
-                                            contactOpen={contactOpen}
-                                        />
-                                    </Suspense>
-                                )}
-                            />
-
-                            <Icon tabIndex="1">
-                                <img
-                                    src={require("../../components/desktop/img/folder-icon.png")}
-                                    alt="my stuff"
-                                />
-                                <div>My Stuff</div>
+                            <Icon>
+                                <Link
+                                    to={
+                                        window.matchMedia("(max-width: 28rem)")
+                                            .matches
+                                            ? "/apps/myprojects"
+                                            : "/apps"
+                                    }
+                                    onTouchStart={() =>
+                                        this.startApp(
+                                            "myProjectsOpen",
+                                            myProjectsIcon,
+                                            9,
+                                            "myProjectsMinimize"
+                                        )
+                                    }
+                                    onDoubleClick={() =>
+                                        this.startApp(
+                                            "myProjectsOpen",
+                                            myProjectsIcon,
+                                            9,
+                                            "myProjectsMinimize"
+                                        )
+                                    }
+                                >
+                                    <img
+                                        src={require("../../components/desktop/img/folder-icon.png")}
+                                        alt="Projects"
+                                    />
+                                    <div>My Projects</div>
+                                </Link>
                             </Icon>
-                            <Icon tabIndex="2">
-                                <img
-                                    src={require("../../components/desktop/img/folder-icon.png")}
-                                    alt="test"
-                                />
-                                <div>Documents</div>
+                            <Icon>
+                                <Link
+                                    to={
+                                        window.matchMedia("(max-width: 28rem)")
+                                            .matches
+                                            ? "/apps/about"
+                                            : "/apps"
+                                    }
+                                    onTouchStart={() =>
+                                        this.startApp(
+                                            "aboutOpen",
+                                            aboutIcon,
+                                            7,
+                                            "aboutMinimize"
+                                        )
+                                    }
+                                    onDoubleClick={() =>
+                                        this.startApp(
+                                            "aboutOpen",
+                                            aboutIcon,
+                                            7,
+                                            "aboutMinimize"
+                                        )
+                                    }
+                                >
+                                    <img
+                                        src={require("../../components/desktop/img/folder-icon.png")}
+                                        alt="About me"
+                                    />
+                                    <div>About me</div>
+                                </Link>
                             </Icon>
-                            <Icon tabIndex="3">
-                                <img
-                                    src={require("../../components/desktop/img/folder-icon.png")}
-                                    alt="test"
-                                />
-                                <div>About</div>
+                            <Icon>
+                                <Link
+                                    to={
+                                        window.matchMedia("(max-width: 28rem)")
+                                            .matches
+                                            ? "/apps/contact"
+                                            : "/apps"
+                                    }
+                                    onTouchStart={() =>
+                                        this.startApp(
+                                            "contactOpen",
+                                            contactIcon,
+                                            8,
+                                            "contactMinimize"
+                                        )
+                                    }
+                                    onDoubleClick={() =>
+                                        this.startApp(
+                                            "contactOpen",
+                                            contactIcon,
+                                            8,
+                                            "contactMinimize"
+                                        )
+                                    }
+                                >
+                                    <img
+                                        src={require("../../components/desktop/img/folder-icon.png")}
+                                        alt="Contact"
+                                    />
+                                    <div>Contact</div>
+                                </Link>
                             </Icon>
                         </DesktopContainer>
                         <TaskbarApp

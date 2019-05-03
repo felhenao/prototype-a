@@ -10,17 +10,22 @@ export const AppContainer = styled.section`
     height: calc(100vh - 3.5rem);
     background: ${props => props.theme.background};
     color: ${props => props.theme.textColor};
-    overflow-y: scroll;
-    /* Hide Scrollbar */
-    &&::-webkit-scrollbar {
-        display: none;
+    overflow: hidden;
+
+    && iframe {
+        width: 100%;
+        height: calc(100% - 2.5rem);
+        overflow: hidden;
+        margin-top: 2.5rem;
     }
-    -ms-overflow-style: none;
 
     @media (min-width: 28em) {
         height: 44rem;
         width: 44rem;
         padding-bottom: 0;
+        && iframe {
+            margin-top: 0rem;
+        }
     }
 
     @media (min-width: 50em) {
