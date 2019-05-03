@@ -16,8 +16,7 @@ export const NumberPad = styled.div`
         height: 6rem;
         width: 5rem;
     }
-    && button:hover,
-    button:focus {
+    && button:hover {
         border: 1px solid ${props => props.theme.folderBorder};
         background: ${props => props.theme.calcNumButtonHover};
         color: ${props => props.theme.textColor};

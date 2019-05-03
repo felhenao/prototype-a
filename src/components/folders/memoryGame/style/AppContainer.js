@@ -16,14 +16,16 @@ export const AppContainer = styled.section`
         display: none;
     }
 
-    @media (min-width: 28em) {
-        height: 44rem;
-        width: 44rem;
+    @media (min-width: 42em) {
+        width: 40rem;
+        height: 40rem;
         padding-bottom: 0;
     }
 
-    @media (min-width: 50em) {
-        top: 8rem;
+    @media (min-width: 60em) {
+        top: 5rem;
         left: 3rem;
+        width: 44rem;
+        height: 44rem;
     }
 `;

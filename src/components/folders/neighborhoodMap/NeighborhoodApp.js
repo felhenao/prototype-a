@@ -1,8 +1,8 @@
 import React, { Component } from "react";
-import NeighborhoodCore from "./NeighborhoodCore";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import { AppContainer } from "./style";
+
 import { Name, NameBar, Buttons } from "../style";
 import { AnimateFadeInOut } from "../../animations/style";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -36,7 +36,6 @@ class NeighborhoodApp extends Component {
     };
 
     render() {
-        const { disabled, close } = this.state;
         const {
             windowIndex,
             activeWindow,
@@ -44,6 +43,7 @@ class NeighborhoodApp extends Component {
             neighborhoodOpen,
             neighborhoodMinimize
         } = this.props;
+        const { disabled, close } = this.state;
         return (
             <Draggable axis="both" handle=".handle" disabled={disabled}>
                 <AnimateFadeInOut
@@ -72,8 +72,9 @@ class NeighborhoodApp extends Component {
                                 </div>
                                 <Link
                                     to={
-                                        window.matchMedia("(max-width: 28rem)")
-                                            .matches
+                                        window.matchMedia(
+                                            "(max-width: 56.25rem)"
+                                        ).matches
                                             ? "/"
                                             : "#"
                                     }
@@ -83,7 +84,7 @@ class NeighborhoodApp extends Component {
                                 </Link>
                             </Buttons>
                         </NameBar>
-                        <NeighborhoodCore />
+                        Under Construction Neighborhood map
                     </AppContainer>
                 </AnimateFadeInOut>
             </Draggable>
@@ -91,11 +92,3 @@ class NeighborhoodApp extends Component {
     }
 }
 export default NeighborhoodApp;
-
-NeighborhoodApp.propTypes = {
-    windowIndex: PropTypes.object.isRequired,
-    neighborhoodOpen: PropTypes.string.isRequired,
-    activeWindow: PropTypes.func.isRequired,
-    minimizeApp: PropTypes.func.isRequired,
-    closeApp: PropTypes.func.isRequired
-};

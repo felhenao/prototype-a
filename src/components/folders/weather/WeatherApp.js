@@ -69,8 +69,9 @@ class WeatherApp extends Component {
                                 </div>
                                 <Link
                                     to={
-                                        window.matchMedia("(max-width: 28rem)")
-                                            .matches
+                                        window.matchMedia(
+                                            "(max-width: 56.25rem)"
+                                        ).matches
                                             ? "/"
                                             : "#"
                                     }
@@ -88,11 +89,3 @@ class WeatherApp extends Component {
     }
 }
 export default WeatherApp;
-
-WeatherApp.propTypes = {
-    windowIndex: PropTypes.object.isRequired,
-    weatherOpen: PropTypes.string.isRequired,
-    activeWindow: PropTypes.func.isRequired,
-    minimizeApp: PropTypes.func.isRequired,
-    closeApp: PropTypes.func.isRequired
-};

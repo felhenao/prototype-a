@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import { AppContainer } from "./style";
+
 import { Name, NameBar, Buttons } from "../style";
 import { AnimateFadeInOut } from "../../animations/style";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -68,8 +69,9 @@ class AboutApp extends Component {
                                 </div>
                                 <Link
                                     to={
-                                        window.matchMedia("(max-width: 28rem)")
-                                            .matches
+                                        window.matchMedia(
+                                            "(max-width: 56.25rem)"
+                                        ).matches
                                             ? "/"
                                             : "#"
                                     }
@@ -87,11 +89,3 @@ class AboutApp extends Component {
     }
 }
 export default AboutApp;
-
-AboutApp.propTypes = {
-    windowIndex: PropTypes.object.isRequired,
-    aboutOpen: PropTypes.string.isRequired,
-    activeWindow: PropTypes.func.isRequired,
-    minimizeApp: PropTypes.func.isRequired,
-    closeApp: PropTypes.func.isRequired
-};

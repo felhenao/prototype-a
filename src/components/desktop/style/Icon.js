@@ -17,19 +17,13 @@ export const Icon = styled.div`
         width: 5rem;
     }
 
-    && a {
-        color: #d6d8de;
-        cursor: default;
-        text-align: center;
-        text-decoration: none;
-    }
-
-    && a:hover {
+    &&:hover {
         background: rgba(174, 192, 229, 0.2);
         border: 1px solid rgb(220, 227, 242, 0.5);
+        cursor: pointer;
     }
 
-    && a:focus {
+    &&:focus {
         background: rgba(174, 192, 229, 0.4);
         border: 1px solid rgb(220, 227, 242, 0.7);
     }

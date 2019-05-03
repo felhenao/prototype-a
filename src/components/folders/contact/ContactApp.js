@@ -69,8 +69,9 @@ class ContactApp extends Component {
                                 </div>
                                 <Link
                                     to={
-                                        window.matchMedia("(max-width: 28rem)")
-                                            .matches
+                                        window.matchMedia(
+                                            "(max-width: 56.25rem)"
+                                        ).matches
                                             ? "/"
                                             : "#"
                                     }
@@ -88,11 +89,3 @@ class ContactApp extends Component {
     }
 }
 export default ContactApp;
-
-ContactApp.propTypes = {
-    windowIndex: PropTypes.object.isRequired,
-    contactOpen: PropTypes.string.isRequired,
-    activeWindow: PropTypes.func.isRequired,
-    minimizeApp: PropTypes.func.isRequired,
-    closeApp: PropTypes.func.isRequired
-};

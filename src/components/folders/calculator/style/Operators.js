@@ -14,8 +14,7 @@ export const Operators = styled.div`
         background: ${props => props.theme.calcOperatorButtonBg};
         color: ${props => props.theme.textColor};
     }
-    && button:hover,
-    button:focus {
+    && button:hover {
         border: 1px solid ${props => props.theme.folderBorder};
         background: ${props => props.theme.calcOperatorButtonHover};
         color: ${props => props.theme.textColor};
