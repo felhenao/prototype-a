@@ -58,7 +58,7 @@ class App extends Component {
     state = {
         theme: DarkTheme,
         logo: "green",
-        size: 16
+        size: 19
     };
 
     changeAppSize = size => {
