@@ -57,7 +57,7 @@ library.add(
 class App extends Component {
     state = {
         theme: DarkTheme,
-        logo: "red",
+        logo: "green",
         size: 16
     };
 
